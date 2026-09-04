@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Farmer Advisory - AgriDetect</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline-variant": "#c0c9bb",
+                    "on-error-container": "#93000a",
+                    "on-primary-fixed-variant": "#0c5216",
+                    "on-primary-fixed": "#002203",
+                    "secondary-fixed-dim": "#78dc77",
+                    "on-secondary-fixed": "#002204",
+                    "primary-fixed-dim": "#91d78a",
+                    "outline": "#717a6d",
+                    "surface": "#f4faff",
+                    "on-tertiary-container": "#c6c7af",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed-variant": "#005313",
+                    "tertiary-fixed-dim": "#c8c8b0",
+                    "on-background": "#111d23",
+                    "surface-container-low": "#e9f6fd",
+                    "error-container": "#ffdad6",
+                    "on-primary-container": "#90d689",
+                    "error": "#ba1a1a",
+                    "tertiary-fixed": "#e4e4cc",
+                    "surface-variant": "#d7e4ec",
+                    "background": "#f4faff",
+                    "tertiary": "#3a3c2b",
+                    "inverse-surface": "#263238",
+                    "primary-fixed": "#acf4a4",
+                    "on-surface": "#111d23",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed-variant": "#474836",
+                    "surface-tint": "#2a6b2c",
+                    "secondary": "#006e1c",
+                    "on-secondary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-highest": "#d7e4ec",
+                    "surface-dim": "#cfdce4",
+                    "tertiary-container": "#525341",
+                    "secondary-container": "#91f78e",
+                    "on-surface-variant": "#41493e",
+                    "primary": "#00450d",
+                    "surface-container": "#e3f0f8",
+                    "inverse-primary": "#91d78a",
+                    "inverse-on-surface": "#e6f3fb",
+                    "surface-container-high": "#ddeaf2",
+                    "on-tertiary-fixed": "#1b1d0e",
+                    "on-secondary-container": "#00731e",
+                    "secondary-fixed": "#94f990",
+                    "primary-container": "#1b5e20",
+                    "on-error": "#ffffff",
+                    "surface-bright": "#f4faff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "card-padding": "20px",
+                    "container-margin": "24px",
+                    "unit": "8px",
+                    "touch-target-min": "48px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg": [
+                            "Inter"
+                    ],
+                    "label-caps": [
+                            "Inter"
+                    ],
+                    "display": [
+                            "Inter"
+                    ],
+                    "body-lg": [
+                            "Inter"
+                    ],
+                    "status-number": [
+                            "Inter"
+                    ],
+                    "body-md": [
+                            "Inter"
+                    ],
+                    "headline-md": [
+                            "Inter"
+                    ],
+                    "headline-lg-mobile": [
+                            "Inter"
+                    ]
+            },
+            "fontSize": {
+                    "headline-lg": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "label-caps": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "display": [
+                            "42px",
+                            {
+                                    "lineHeight": "52px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "body-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "status-number": [
+                            "20px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-md": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-lg-mobile": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "600"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 1,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-[80px] md:pb-0 md:pl-64">
+<!-- Web/Desktop Side Navigation (from JSON) -->
+<nav class="hidden md:flex flex-col h-full border-r border-outline-variant bg-surface-container-low shadow-md h-screen w-64 fixed left-0 top-0 z-40">
+<div class="p-container-margin">
+<span class="font-headline-md text-headline-md text-primary font-bold">AgriDetect</span>
+</div>
+<div class="px-4 py-2 border-b border-outline-variant flex items-center gap-4 mb-4">
+<img class="w-12 h-12 rounded-full object-cover bg-surface-variant" data-alt="A close up portrait of an agricultural district officer with a professional yet approachable demeanor, wearing a light-colored functional shirt, set against a blurred background of a modern farm facility with soft natural lighting, emphasizing authority and competence in a government-ready style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNIp3aNjwB0EbfX57oGe9HO-OTP_4rLNIFlexpFe8HCNHhcd6qBzejMXQ2G5V5eYRs9AEqPdmq-wuRASHJMQ4SqO0F81ZuyOCye0jOk3J2fvhYVOguz5mbQhYVskQhL30vwiD15WCIgWi8gbgCnvEvL7_RcW0iZjc5HqVM_OaAas8kua3A7ZPkgxCNiIRWeOP5CRWfmsf6KUB1tn2OCO3yWtTJEewvlc4AtIpvJURDsyONVnW8JxG47w"/>
+<div>
+<p class="font-body-md text-body-md font-bold text-on-surface">AgriDetect Admin</p>
+<p class="font-label-caps text-label-caps text-on-surface-variant">District Officer</p>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-highest transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-highest transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">location_on</span>
+<span class="font-body-md text-body-md">Hotspots</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-highest transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">insights</span>
+<span class="font-body-md text-body-md">Analytics</span>
+</a>
+<a class="flex items-center gap-3 bg-secondary-container text-on-secondary-container rounded-lg px-4 py-3 mx-2" href="#">
+<span class="material-symbols-outlined">folder_open</span>
+<span class="font-body-md text-body-md font-bold">Cases</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-highest transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">warning</span>
+<span class="font-body-md text-body-md">Early Warnings</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-highest transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">summarize</span>
+<span class="font-body-md text-body-md">Reports</span>
+</a>
+</div>
+</nav>
+<!-- Mobile Top App Bar (from JSON) -->
+<header class="md:hidden flex justify-between items-center px-container-margin h-touch-target-min w-full fixed top-0 z-50 bg-surface shadow-sm">
+<button class="h-touch-target-min w-touch-target-min flex items-center justify-center text-primary active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined">agriculture</span>
+</button>
+<span class="font-headline-md text-headline-md font-bold text-primary">AgriDetect</span>
+<button class="h-touch-target-min w-touch-target-min flex items-center justify-center text-primary active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-[72px] md:pt-container-margin px-container-margin pb-container-margin max-w-5xl mx-auto">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:justify-between md:items-end mb-8 gap-4">
+<div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary mb-2">What Should You Do?</h1>
+<div class="flex items-center gap-2 bg-error-container text-on-error-container px-3 py-1.5 rounded-full inline-flex">
+<span class="material-symbols-outlined text-lg">pest_control</span>
+<span class="font-body-md text-body-md font-bold">Tomato Early Blight</span>
+<span class="material-symbols-outlined text-lg ml-1" title="Expert Verified">verified</span>
+</div>
+</div>
+<!-- Language Toggle -->
+<div class="flex bg-surface-container-high rounded-lg p-1 self-start">
+<button class="px-4 py-2 rounded-md font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-highest transition-colors">हिंदी</button>
+<button class="px-4 py-2 rounded-md font-body-md text-body-md bg-surface text-primary shadow-sm font-bold">English</button>
+</div>
+</div>
+<!-- Action Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Immediate Action -->
+<div class="bg-surface-container-lowest rounded-xl p-card-padding shadow-[0_4px_12px_rgba(0,0,0,0.08)] border-l-4 border-error flex flex-col h-full">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-full bg-error-container text-on-error-container flex items-center justify-center">
+<span class="material-symbols-outlined">local_florist</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Immediate Action</h2>
+</div>
+<ul class="space-y-3 font-body-md text-body-md text-on-surface-variant flex-grow">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-error mt-0.5 text-[20px]">check_circle</span>
+<span>Remove severely affected leaves</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-error mt-0.5 text-[20px]">check_circle</span>
+<span>Maintain field hygiene</span>
+</li>
+</ul>
+</div>
+<!-- Prevention -->
+<div class="bg-surface-container-lowest rounded-xl p-card-padding shadow-[0_4px_12px_rgba(0,0,0,0.08)] border-l-4 border-primary flex flex-col h-full">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined">shield</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Prevention</h2>
+</div>
+<ul class="space-y-3 font-body-md text-body-md text-on-surface-variant flex-grow">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary mt-0.5 text-[20px]">check_circle</span>
+<span>Maintain plant spacing</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary mt-0.5 text-[20px]">check_circle</span>
+<span>Monitor nearby plants</span>
+</li>
+</ul>
+</div>
+<!-- IPM -->
+<div class="bg-surface-container-lowest rounded-xl p-card-padding shadow-[0_4px_12px_rgba(0,0,0,0.08)] border-l-4 border-secondary flex flex-col h-full">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined">bug_report</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Integrated Pest Mgmt</h2>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-3">Focus on non-chemical methods first.</p>
+<div class="bg-surface-container-low p-3 rounded-lg border border-outline-variant/30 text-sm mt-auto">
+<span class="font-bold text-secondary">Tip:</span> Introduce beneficial insects or use organic sprays before resorting to strong chemicals.
+                </div>
+</div>
+<!-- Treatment Guidance -->
+<div class="bg-surface-container-lowest rounded-xl p-card-padding shadow-[0_4px_12px_rgba(0,0,0,0.08)] border-l-4 border-tertiary flex flex-col h-full">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-full bg-tertiary-container text-on-tertiary-container flex items-center justify-center">
+<span class="material-symbols-outlined">medication</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Treatment Guidance</h2>
+</div>
+<ul class="space-y-3 font-body-md text-body-md text-on-surface-variant flex-grow">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-tertiary mt-0.5 text-[20px]">check_circle</span>
+<span>Use approved fungicide (Consult local shop for 'Mancozeb')</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-tertiary mt-0.5 text-[20px]">check_circle</span>
+<span>Follow product label</span>
+</li>
+</ul>
+</div>
+<!-- Avoid (Full Width) -->
+<div class="md:col-span-2 bg-[#fff5f5] rounded-xl p-card-padding shadow-[0_4px_12px_rgba(0,0,0,0.08)] border border-[#ffdad6] flex flex-col md:flex-row items-start md:items-center gap-4">
+<div class="w-12 h-12 shrink-0 rounded-full bg-error text-on-error flex items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">warning</span>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-[#93000a] mb-1">Avoid</h2>
+<p class="font-body-lg text-body-lg text-[#ba1a1a]">Do not overhead irrigate during evenings.</p>
+</div>
+</div>
+</div>
+<div class="mt-8 flex justify-center">
+<button class="bg-primary text-on-primary font-body-md text-body-md font-bold py-3 px-8 rounded-full shadow-md hover:bg-surface-tint transition-colors active:scale-95 flex items-center gap-2 h-touch-target-min">
+<span class="material-symbols-outlined">print</span>
+                Print Advisory
+            </button>
+</div>
+</main>
+<!-- Mobile Bottom Nav Bar (from JSON) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-2 pt-2 bg-surface shadow-[0_-4px_12px_rgba(0,0,0,0.08)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-caps text-label-caps mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-label-caps text-label-caps mt-1">Report</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined">grass</span>
+<span class="font-label-caps text-label-caps mt-1">My Crops</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-label-caps text-label-caps mt-1">Reports</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-caps text-label-caps mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

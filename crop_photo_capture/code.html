@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AgriDetect - Crop Photo Capture</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline-variant": "#c0c9bb",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed-variant": "#0c5216",
+                        "on-primary-fixed": "#002203",
+                        "secondary-fixed-dim": "#78dc77",
+                        "on-secondary-fixed": "#002204",
+                        "primary-fixed-dim": "#91d78a",
+                        "outline": "#717a6d",
+                        "surface": "#f4faff",
+                        "on-tertiary-container": "#c6c7af",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#005313",
+                        "tertiary-fixed-dim": "#c8c8b0",
+                        "on-background": "#111d23",
+                        "surface-container-low": "#e9f6fd",
+                        "error-container": "#ffdad6",
+                        "on-primary-container": "#90d689",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#e4e4cc",
+                        "surface-variant": "#d7e4ec",
+                        "background": "#f4faff",
+                        "tertiary": "#3a3c2b",
+                        "inverse-surface": "#263238",
+                        "primary-fixed": "#acf4a4",
+                        "on-surface": "#111d23",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#474836",
+                        "surface-tint": "#2a6b2c",
+                        "secondary": "#006e1c",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#d7e4ec",
+                        "surface-dim": "#cfdce4",
+                        "tertiary-container": "#525341",
+                        "secondary-container": "#91f78e",
+                        "on-surface-variant": "#41493e",
+                        "primary": "#00450d",
+                        "surface-container": "#e3f0f8",
+                        "inverse-primary": "#91d78a",
+                        "inverse-on-surface": "#e6f3fb",
+                        "surface-container-high": "#ddeaf2",
+                        "on-tertiary-fixed": "#1b1d0e",
+                        "on-secondary-container": "#00731e",
+                        "secondary-fixed": "#94f990",
+                        "primary-container": "#1b5e20",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#f4faff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "card-padding": "20px",
+                        "container-margin": "24px",
+                        "unit": "8px",
+                        "touch-target-min": "48px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "display": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "status-number": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "display": ["42px", { "lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "status-number": ["20px", { "lineHeight": "24px", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md overflow-x-hidden pt-[64px] md:pl-64">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-container-margin h-touch-target-min w-full fixed top-0 z-50 bg-surface dark:bg-inverse-surface shadow-sm md:pl-[calc(16rem+24px)] transition-all">
+<div class="flex items-center gap-4">
+<button aria-label="Menu" class="md:hidden text-primary dark:text-primary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-highest transition-colors rounded-full p-2">
+<span class="material-symbols-outlined" data-icon="agriculture">agriculture</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">AgriDetect</h1>
+</div>
+<button aria-label="Notifications" class="text-primary dark:text-primary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-highest transition-colors rounded-full p-2">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</header>
+<!-- NavigationDrawer (Desktop) -->
+<nav class="hidden md:flex flex-col h-full border-r border-outline-variant dark:border-outline bg-surface-container-low dark:bg-inverse-surface shadow-md h-screen w-64 fixed left-0 top-0 z-40 pt-[80px]">
+<div class="px-container-margin py-4 mb-4 flex items-center gap-4 border-b border-outline-variant/30">
+<div class="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center overflow-hidden">
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+<div>
+<p class="font-headline-md text-[16px] leading-[24px] font-bold text-on-surface">AgriDetect Admin</p>
+<p class="font-body-md text-[14px] text-on-surface-variant">District Officer</p>
+<p class="font-label-caps text-label-caps text-secondary mt-1">Active Now</p>
+</div>
+</div>
+<div class="flex flex-col gap-2 flex-grow overflow-y-auto">
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-outline-variant px-4 py-3 mx-2 hover:bg-surface-container-highest transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" data-icon="dashboard">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-outline-variant px-4 py-3 mx-2 hover:bg-surface-container-highest transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" data-icon="location_on">location_on</span>
+<span class="font-body-md text-body-md">Hotspots</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-outline-variant px-4 py-3 mx-2 hover:bg-surface-container-highest transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" data-icon="insights">insights</span>
+<span class="font-body-md text-body-md">Analytics</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-outline-variant px-4 py-3 mx-2 hover:bg-surface-container-highest transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" data-icon="folder_open">folder_open</span>
+<span class="font-body-md text-body-md">Cases</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-outline-variant px-4 py-3 mx-2 hover:bg-surface-container-highest transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" data-icon="warning">warning</span>
+<span class="font-body-md text-body-md">Early Warnings</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-outline-variant px-4 py-3 mx-2 hover:bg-surface-container-highest transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" data-icon="summarize">summarize</span>
+<span class="font-body-md text-body-md">Reports</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-grow p-container-margin pb-[100px] max-w-4xl mx-auto w-full flex flex-col gap-6">
+<!-- Header -->
+<div class="mb-2">
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Report Crop Issue</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Capture clear photos of the affected area for accurate AI analysis.</p>
+</div>
+<!-- Camera Viewfinder Placeholder -->
+<div class="relative w-full aspect-[3/4] md:aspect-video bg-surface-container-high rounded-xl overflow-hidden shadow-lg border-2 border-outline-variant/50 flex flex-col items-center justify-center group cursor-pointer transition-all hover:border-primary">
+<!-- Reticle / Frame Guides -->
+<div class="absolute inset-4 border-2 border-primary/30 rounded-lg pointer-events-none grid grid-cols-3 grid-rows-3">
+<div class="border-r border-b border-primary/10"></div>
+<div class="border-r border-b border-primary/10"></div>
+<div class="border-b border-primary/10"></div>
+<div class="border-r border-b border-primary/10"></div>
+<div class="border-r border-b border-primary/10 flex items-center justify-center">
+<div class="w-16 h-16 border-2 border-primary/40 rounded-full"></div>
+</div>
+<div class="border-b border-primary/10"></div>
+<div class="border-r border-primary/10"></div>
+<div class="border-r border-primary/10"></div>
+<div></div>
+</div>
+<!-- Main Action Area (before capture) -->
+<div class="flex flex-col items-center z-10 p-6 bg-surface/80 backdrop-blur-md rounded-2xl shadow-sm border border-surface-variant text-center">
+<button class="w-20 h-20 bg-primary text-on-primary rounded-full flex items-center justify-center shadow-md hover:bg-primary/90 hover:scale-105 active:scale-95 transition-all mb-4 focus:outline-none focus:ring-4 focus:ring-primary/30">
+<span class="material-symbols-outlined text-4xl" data-icon="photo_camera" data-weight="fill" style="font-variation-settings: 'FILL' 1;">photo_camera</span>
+</button>
+<p class="font-headline-md text-[18px] text-on-surface font-semibold mb-1">Take Photo</p>
+<div class="mt-4 border-t border-outline-variant/30 pt-4 w-full">
+<button class="text-primary hover:text-primary-container font-body-md text-body-md flex items-center gap-2 justify-center w-full transition-colors">
+<span class="material-symbols-outlined" data-icon="image">image</span>
+<span>Upload from Gallery</span>
+</button>
+</div>
+</div>
+<!-- Simulated Camera Feed Background (Stylized) -->
+<div class="absolute inset-0 bg-gradient-to-br from-surface-container-high to-surface-container opacity-50 z-0"></div>
+<div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_rgba(0,0,0,0.1)_100%)] z-0 pointer-events-none"></div>
+</div>
+<!-- Secondary Actions & Guidance Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Guidance Section -->
+<div class="bg-surface-container-lowest rounded-xl p-card-padding shadow-sm border border-surface-variant">
+<h3 class="font-headline-md text-[20px] text-on-surface mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="lightbulb" data-weight="fill" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+                    How to take a good photo
+                </h3>
+<ul class="space-y-4">
+<li class="flex items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-on-secondary-container text-sm" data-icon="eco">eco</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-on-surface">Keep leaf clearly visible</p>
+<p class="font-body-md text-[14px] text-on-surface-variant">Ensure the affected part is in focus and not blurry.</p>
+</div>
+</li>
+<li class="flex items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-on-secondary-container text-sm" data-icon="wb_sunny">wb_sunny</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-on-surface">Use good lighting</p>
+<p class="font-body-md text-[14px] text-on-surface-variant">Avoid harsh shadows or direct glare on the leaf surface.</p>
+</div>
+</li>
+<li class="flex items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-on-secondary-container text-sm" data-icon="center_focus_strong">center_focus_strong</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-on-surface">Capture affected area closely</p>
+<p class="font-body-md text-[14px] text-on-surface-variant">Fill the frame with the problem area for better AI detection.</p>
+</div>
+</li>
+</ul>
+</div>
+<!-- Voice & Submission Actions -->
+<div class="flex flex-col gap-4 justify-end">
+<!-- Voice Description -->
+<button class="bg-surface-container-low hover:bg-surface-container-high border border-outline-variant text-on-surface rounded-xl p-4 flex flex-col items-center justify-center gap-3 transition-all h-32 w-full group shadow-sm active:scale-95">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="mic">mic</span>
+</div>
+<span class="font-body-md text-body-md font-medium text-center">Describe the problem by voice</span>
+</button>
+<!-- Post-Capture Actions (Hidden by default, shown for structure context) -->
+<!-- Assuming these would appear after a photo is taken. Structuring them here as if a photo was just taken for demonstration of the requested buttons -->
+<div class="flex gap-4 mt-auto">
+<button class="flex-1 border-2 border-primary text-primary hover:bg-primary/5 rounded-full py-3 px-6 font-body-md text-body-md font-bold transition-colors text-center h-touch-target-min flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="replay">replay</span>
+                        Retake
+                    </button>
+<button class="flex-1 bg-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container rounded-full py-3 px-6 font-body-md text-body-md font-bold transition-colors shadow-md text-center h-touch-target-min flex items-center justify-center gap-2">
+                        Submit
+                        <span class="material-symbols-outlined text-sm" data-icon="send">send</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-2 pt-2 bg-surface dark:bg-inverse-surface shadow-[0_-4px_12px_rgba(0,0,0,0.08)] rounded-t-xl transition-transform">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-container-high transition-all rounded-full h-touch-target-min" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-caps text-label-caps mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container dark:bg-primary-container dark:text-on-primary-container rounded-full px-4 py-1 hover:bg-surface-container-high transition-all scale-90 duration-200 h-touch-target-min" href="#">
+<span class="material-symbols-outlined" data-icon="add_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+<span class="font-label-caps text-label-caps mt-1">Report</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-container-high transition-all rounded-full h-touch-target-min" href="#">
+<span class="material-symbols-outlined" data-icon="grass">grass</span>
+<span class="font-label-caps text-label-caps mt-1">My Crops</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-container-high transition-all rounded-full h-touch-target-min" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-label-caps text-label-caps mt-1">Reports</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-container-high transition-all rounded-full h-touch-target-min" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-caps text-label-caps mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

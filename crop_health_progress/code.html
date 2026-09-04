@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Crop Health Progress - AgriDetect</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline-variant": "#c0c9bb",
+                    "on-error-container": "#93000a",
+                    "on-primary-fixed-variant": "#0c5216",
+                    "on-primary-fixed": "#002203",
+                    "secondary-fixed-dim": "#78dc77",
+                    "on-secondary-fixed": "#002204",
+                    "primary-fixed-dim": "#91d78a",
+                    "outline": "#717a6d",
+                    "surface": "#f4faff",
+                    "on-tertiary-container": "#c6c7af",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed-variant": "#005313",
+                    "tertiary-fixed-dim": "#c8c8b0",
+                    "on-background": "#111d23",
+                    "surface-container-low": "#e9f6fd",
+                    "error-container": "#ffdad6",
+                    "on-primary-container": "#90d689",
+                    "error": "#ba1a1a",
+                    "tertiary-fixed": "#e4e4cc",
+                    "surface-variant": "#d7e4ec",
+                    "background": "#f4faff",
+                    "tertiary": "#3a3c2b",
+                    "inverse-surface": "#263238",
+                    "primary-fixed": "#acf4a4",
+                    "on-surface": "#111d23",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed-variant": "#474836",
+                    "surface-tint": "#2a6b2c",
+                    "secondary": "#006e1c",
+                    "on-secondary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-highest": "#d7e4ec",
+                    "surface-dim": "#cfdce4",
+                    "tertiary-container": "#525341",
+                    "secondary-container": "#91f78e",
+                    "on-surface-variant": "#41493e",
+                    "primary": "#00450d",
+                    "surface-container": "#e3f0f8",
+                    "inverse-primary": "#91d78a",
+                    "inverse-on-surface": "#e6f3fb",
+                    "surface-container-high": "#ddeaf2",
+                    "on-tertiary-fixed": "#1b1d0e",
+                    "on-secondary-container": "#00731e",
+                    "secondary-fixed": "#94f990",
+                    "primary-container": "#1b5e20",
+                    "on-error": "#ffffff",
+                    "surface-bright": "#f4faff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "card-padding": "20px",
+                    "container-margin": "24px",
+                    "unit": "8px",
+                    "touch-target-min": "48px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "display": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "status-number": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "display": ["42px", {"lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "status-number": ["20px", {"lineHeight": "24px", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body { -webkit-tap-highlight-color: transparent; }
+        /* Ambient shadow utility for tactile feel */
+        .ambient-shadow {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-[90px] pt-[72px] font-sans antialiased flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-surface text-primary shadow-sm flex justify-between items-center px-container-margin h-touch-target-min w-full fixed top-0 z-50 transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary hover:bg-surface-container-low transition-colors rounded-full p-2 cursor-pointer" data-icon="agriculture" data-weight="fill" style="font-variation-settings: 'FILL' 1;">agriculture</span>
+<span class="font-headline-md text-headline-md font-bold text-primary">AgriDetect</span>
+</div>
+<div>
+<span class="material-symbols-outlined text-primary hover:bg-surface-container-low transition-colors rounded-full p-2 cursor-pointer" data-icon="notifications">notifications</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-container-margin py-6 flex flex-col gap-6 max-w-4xl mx-auto w-full">
+<!-- Header & Status -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-on-surface">Crop Health Progress</h1>
+<div class="inline-flex items-center gap-2 bg-surface-container text-on-surface-variant px-4 py-2 rounded-full border border-outline-variant">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+<span class="font-body-md text-body-md font-semibold">Improving</span>
+</div>
+</div>
+<!-- AI Insight Note -->
+<div class="bg-surface-container-lowest ambient-shadow rounded-xl p-card-padding border border-outline-variant flex items-start gap-4">
+<div class="bg-surface-container-high rounded-full p-3 flex-shrink-0">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+<div>
+<h3 class="font-body-lg text-body-lg font-semibold text-on-surface mb-1">AI Analysis</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Follow-up photo shows <strong class="text-secondary font-semibold">30% reduction</strong> in spotted leaf area compared to the initial scan.</p>
+</div>
+</div>
+<!-- Comparison View -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Previous -->
+<div class="bg-surface-container-lowest ambient-shadow rounded-xl overflow-hidden border border-outline-variant flex flex-col">
+<div class="relative h-48 w-full">
+<img class="w-full h-full object-cover" data-alt="A close-up, high-resolution photograph of a corn plant leaf showing severe signs of southern corn leaf blight. The leaf has numerous elongated, tan lesions with reddish-brown borders. The lighting is harsh, natural outdoor sunlight, emphasizing the damage. Shot in a documentary, agronomic style. Overall tone is analytical and slightly concerning." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_wE8GZ_cOfDo4m5lETikacIkgPhBKnHiuMMLkOeWAwQE0JOFamvjKNsv-gKgF2njQZ6RW4g-jpx388ya7Vcawy7cpgkDivCXfiTi5he8CBylc0cQXWhhPmHB2Wx32ct-B8i2sas4MBYASG-rXoXXahvOB4rKuC6_m24qFC7BmuCt4eXBNdpW4iMA68dM9E6MUSF9uPl5mO7xCf_R1Ba67Vz00BkbvXC1QIEhSxUw7ND7po7ynPuu2lQ"/>
+<div class="absolute top-3 left-3 bg-error-container text-on-error-container px-3 py-1 rounded-full font-label-caps text-label-caps flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">error</span>
+                        Severe
+                    </div>
+</div>
+<div class="p-4 border-t border-outline-variant bg-surface">
+<p class="font-body-md text-body-md font-semibold text-on-surface">Previous Scan</p>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1">Oct 12, 2023</p>
+</div>
+</div>
+<!-- Current -->
+<div class="bg-surface-container-lowest ambient-shadow rounded-xl overflow-hidden border border-primary-fixed-dim border-2 flex flex-col relative">
+<!-- Status Bar Indicator -->
+<div class="absolute top-0 left-0 w-full h-1 bg-secondary z-10"></div>
+<div class="relative h-48 w-full">
+<img class="w-full h-full object-cover" data-alt="A close-up, high-resolution photograph of a recovering corn plant leaf. The previously tan lesions are fading, and there is visible new green tissue growth. The leaf looks noticeably healthier than the severe stage. The lighting is soft, morning sunlight, conveying a sense of recovery and optimism. Shot in a crisp, modern agronomic style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYxvfr55LrJ71x4J8KUn8jRhodHpamVNAeIb5hDHIEoiYu6_wogGnl-MWalccT1z8AxJ_l2-1k8WH4vE03g8czLbkFSo3UkNfqaKPq_80uAoq_AnZZSZvrR2eAmy-5hfYgougyf3IYSYJOfBBzsS_IAMi2nPtC1kDcT1GRn13xNtDRW3uy3w-VamjL6-Wa7xJQXk9BZNXp8Po6GDocxCa_UjLR7jJiSF8qzpVDjapfZw7EvtO6XAAtOg"/>
+<div class="absolute top-3 left-3 bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-caps text-label-caps flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        Improving
+                    </div>
+</div>
+<div class="p-4 border-t border-outline-variant bg-surface">
+<p class="font-body-md text-body-md font-semibold text-on-surface">Current Scan</p>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1">Today, 09:45 AM</p>
+</div>
+</div>
+</div>
+<!-- Progress Chart -->
+<div class="bg-surface-container-lowest ambient-shadow rounded-xl p-card-padding border border-outline-variant">
+<h3 class="font-body-lg text-body-lg font-semibold text-on-surface mb-4">Disease Severity Trend</h3>
+<div class="w-full h-40 relative">
+<!-- Simple SVG Chart Representation -->
+<svg class="w-full h-full preserve-aspect-ratio-none" viewbox="0 0 400 120">
+<!-- Grid lines -->
+<line stroke="#d7e4ec" stroke-dasharray="4" stroke-width="1" x1="0" x2="400" y1="20" y2="20"></line>
+<line stroke="#d7e4ec" stroke-dasharray="4" stroke-width="1" x1="0" x2="400" y1="60" y2="60"></line>
+<line stroke="#d7e4ec" stroke-width="1" x1="0" x2="400" y1="100" y2="100"></line>
+<!-- Area fill -->
+<path d="M 0,20 L 100,30 L 200,60 L 300,90 L 400,105 L 400,100 L 0,100 Z" fill="#e9f6fd" opacity="0.5"></path>
+<!-- Line -->
+<path d="M 0,20 L 100,30 L 200,60 L 300,90 L 400,105" fill="none" stroke="#2a6b2c" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
+<!-- Data points -->
+<circle cx="0" cy="20" fill="#2a6b2c" r="4"></circle>
+<circle cx="100" cy="30" fill="#2a6b2c" r="4"></circle>
+<circle cx="200" cy="60" fill="#2a6b2c" r="4"></circle>
+<circle cx="300" cy="90" fill="#2a6b2c" r="4"></circle>
+<circle cx="400" cy="105" fill="#ffffff" r="5" stroke="#006e1c" stroke-width="2"></circle>
+</svg>
+<!-- Labels -->
+<div class="flex justify-between w-full mt-2 text-on-surface-variant font-label-caps text-label-caps">
+<span>Oct 1</span>
+<span>Oct 5</span>
+<span>Oct 9</span>
+<span>Oct 12</span>
+<span class="text-on-surface font-bold">Today</span>
+</div>
+</div>
+</div>
+<!-- Next Action -->
+<div class="mt-4 mb-6">
+<button class="w-full bg-secondary text-on-secondary font-body-lg text-body-lg font-semibold py-4 px-6 rounded-xl shadow-md hover:bg-surface-tint active:scale-[0.98] transition-all flex justify-center items-center gap-2">
+<span class="material-symbols-outlined">add_a_photo</span>
+                Submit another photo in 3 days
+            </button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="bg-surface shadow-[0_-4px_12px_rgba(0,0,0,0.08)] fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-2 pt-2 rounded-t-xl transition-colors md:hidden">
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 cursor-pointer hover:bg-surface-container-high transition-all rounded-lg group">
+<span class="material-symbols-outlined group-active:scale-90 transition-transform duration-200" data-icon="home">home</span>
+<span class="font-label-caps text-label-caps mt-1">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 cursor-pointer hover:bg-surface-container-high transition-all rounded-lg group">
+<span class="material-symbols-outlined group-active:scale-90 transition-transform duration-200" data-icon="add_circle">add_circle</span>
+<span class="font-label-caps text-label-caps mt-1">Report</span>
+</div>
+<!-- Active Tab: My Crops -->
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 cursor-pointer hover:bg-surface-container-high transition-all group">
+<span class="material-symbols-outlined group-active:scale-90 transition-transform duration-200" data-icon="grass" data-weight="fill" style="font-variation-settings: 'FILL' 1;">grass</span>
+<span class="font-label-caps text-label-caps mt-1">My Crops</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 cursor-pointer hover:bg-surface-container-high transition-all rounded-lg group">
+<span class="material-symbols-outlined group-active:scale-90 transition-transform duration-200" data-icon="description">description</span>
+<span class="font-label-caps text-label-caps mt-1">Reports</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 cursor-pointer hover:bg-surface-container-high transition-all rounded-lg group">
+<span class="material-symbols-outlined group-active:scale-90 transition-transform duration-200" data-icon="person">person</span>
+<span class="font-label-caps text-label-caps mt-1">Profile</span>
+</div>
+</nav>
+</body></html>

@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AgriDetect - Expert Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "outline-variant": "#c0c9bb",
+                      "on-error-container": "#93000a",
+                      "on-primary-fixed-variant": "#0c5216",
+                      "on-primary-fixed": "#002203",
+                      "secondary-fixed-dim": "#78dc77",
+                      "on-secondary-fixed": "#002204",
+                      "primary-fixed-dim": "#91d78a",
+                      "outline": "#717a6d",
+                      "surface": "#f4faff",
+                      "on-tertiary-container": "#c6c7af",
+                      "on-tertiary": "#ffffff",
+                      "on-secondary-fixed-variant": "#005313",
+                      "tertiary-fixed-dim": "#c8c8b0",
+                      "on-background": "#111d23",
+                      "surface-container-low": "#e9f6fd",
+                      "error-container": "#ffdad6",
+                      "on-primary-container": "#90d689",
+                      "error": "#ba1a1a",
+                      "tertiary-fixed": "#e4e4cc",
+                      "surface-variant": "#d7e4ec",
+                      "background": "#f4faff",
+                      "tertiary": "#3a3c2b",
+                      "inverse-surface": "#263238",
+                      "primary-fixed": "#acf4a4",
+                      "on-surface": "#111d23",
+                      "on-primary": "#ffffff",
+                      "on-tertiary-fixed-variant": "#474836",
+                      "surface-tint": "#2a6b2c",
+                      "secondary": "#006e1c",
+                      "on-secondary": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container-highest": "#d7e4ec",
+                      "surface-dim": "#cfdce4",
+                      "tertiary-container": "#525341",
+                      "secondary-container": "#91f78e",
+                      "on-surface-variant": "#41493e",
+                      "primary": "#00450d",
+                      "surface-container": "#e3f0f8",
+                      "inverse-primary": "#91d78a",
+                      "inverse-on-surface": "#e6f3fb",
+                      "surface-container-high": "#ddeaf2",
+                      "on-tertiary-fixed": "#1b1d0e",
+                      "on-secondary-container": "#00731e",
+                      "secondary-fixed": "#94f990",
+                      "primary-container": "#1b5e20",
+                      "on-error": "#ffffff",
+                      "surface-bright": "#f4faff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "card-padding": "20px",
+                      "container-margin": "24px",
+                      "unit": "8px",
+                      "touch-target-min": "48px",
+                      "gutter": "16px"
+              },
+              "fontFamily": {
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Inter"
+                      ],
+                      "display": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "status-number": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "headline-lg-mobile": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display": [
+                              "42px",
+                              {
+                                      "lineHeight": "52px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "status-number": [
+                              "20px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex">
+<!-- TopAppBar (Mobile Only) -->
+<header class="md:hidden flex justify-between items-center px-container-margin h-touch-target-min w-full fixed top-0 z-50 bg-surface dark:bg-inverse-surface shadow-sm">
+<button class="text-primary dark:text-primary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-highest transition-colors active:scale-95 transition-transform duration-150 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">agriculture</span>
+</button>
+<div class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">
+            AgriDetect
+        </div>
+<button class="text-primary dark:text-primary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-highest transition-colors active:scale-95 transition-transform duration-150 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<!-- NavigationDrawer (Desktop Only) -->
+<nav class="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 border-r border-outline-variant dark:border-outline bg-surface-container-low dark:bg-inverse-surface shadow-md z-40">
+<div class="p-container-margin border-b border-outline-variant flex items-center gap-4">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A clean, professional headshot of an agricultural expert in an outdoor setting, wearing a simple collared shirt. The lighting is bright and natural, indicating a sunny day. The image fits perfectly in a circular avatar frame, conveying authority and approachability in an agricultural context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBu8dsZWG4qTlmWVt9Qf4rbxFBasAUTiB5wCJ_Hi2HfQGv5hXb9g84uA-2sE_A025kbtb6aDL-N-deAA35y4KhTDtFhPRa0ZEjO2yEaRol9xDtANV4A86csXYZcqj3gF6jxUQ-WKESb4uHTP7YvvSj8s0wEglcEvPvwZddRG4zZdALch7HD0aQR6TsjBmp-AGclQLp3CjWNuzVzZqegMv8GoorvRBQwyBCIZ-yR3nbnZDfjz39uUfuXvg"/>
+<div>
+<div class="font-headline-md text-headline-md text-primary truncate">AgriDetect Admin</div>
+<div class="font-body-md text-body-md text-on-surface-variant text-sm truncate">District Officer</div>
+<div class="font-label-caps text-label-caps text-secondary mt-1">Active Now</div>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto py-4">
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-outline-variant px-4 py-3 mx-2 hover:bg-surface-container-highest transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-outline-variant px-4 py-3 mx-2 hover:bg-surface-container-highest transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">location_on</span>
+<span class="font-body-md text-body-md">Hotspots</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-outline-variant px-4 py-3 mx-2 hover:bg-surface-container-highest transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">insights</span>
+<span class="font-body-md text-body-md">Analytics</span>
+</a>
+<a class="flex items-center gap-3 bg-secondary-container text-on-secondary-container dark:bg-primary-container dark:text-on-primary-container rounded-lg px-4 py-3 mx-2 translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">folder_open</span>
+<span class="font-body-md text-body-md font-bold">Cases</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-outline-variant px-4 py-3 mx-2 hover:bg-surface-container-highest transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">warning</span>
+<span class="font-body-md text-body-md">Early Warnings</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant dark:text-outline-variant px-4 py-3 mx-2 hover:bg-surface-container-highest transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">summarize</span>
+<span class="font-body-md text-body-md">Reports</span>
+</a>
+</div>
+<div class="p-4 border-t border-outline-variant">
+<div class="bg-error-container text-on-error-container p-3 rounded-lg shadow-sm">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-error">campaign</span>
+<span class="font-label-caps text-label-caps font-bold">Urgent Alert</span>
+</div>
+<p class="text-sm font-body-md">Regional Blight Outbreak detected in North Sector. Verify pending cases immediately.</p>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 pt-16 md:pt-0 p-container-margin min-h-screen">
+<!-- Header -->
+<div class="mb-8 flex flex-col md:flex-row md:justify-between md:items-end gap-4 border-b border-outline-variant pb-4 mt-8 md:mt-4">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Expert Diagnostic Dashboard</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-2">Welcome back, Ramesh (Senior Pathologist)</p>
+</div>
+<div class="flex gap-2">
+<button class="bg-surface-container-high hover:bg-surface-variant text-on-surface flex items-center gap-2 px-4 py-2 rounded-lg transition-colors font-body-md font-medium shadow-sm">
+<span class="material-symbols-outlined text-sm">filter_list</span> Filter
+                </button>
+<button class="bg-primary hover:bg-surface-tint text-on-primary flex items-center gap-2 px-4 py-2 rounded-lg transition-colors font-body-md font-medium shadow-sm">
+<span class="material-symbols-outlined text-sm">download</span> Export
+                </button>
+</div>
+</div>
+<!-- KPI Summary Cards (Bento Grid) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-container-margin">
+<div class="bg-surface-container-lowest rounded-xl p-card-padding shadow-[0_4px_12px_rgba(0,0,0,0.08)] border border-surface-container-high relative overflow-hidden flex flex-col justify-between h-32 hover:shadow-md transition-shadow">
+<div class="absolute top-0 left-0 w-full h-1 bg-surface-variant"></div>
+<div class="flex justify-between items-start">
+<div class="bg-surface-container rounded-full p-2 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">folder</span>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Pending</span>
+</div>
+<div>
+<div class="font-display text-display text-on-surface">42</div>
+<div class="font-body-md text-body-md text-on-surface-variant text-sm">Cases awaiting verification</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-card-padding shadow-[0_4px_12px_rgba(0,0,0,0.08)] border border-error-container relative overflow-hidden flex flex-col justify-between h-32 hover:shadow-md transition-shadow">
+<div class="absolute top-0 left-0 w-full h-1 bg-error"></div>
+<div class="flex justify-between items-start">
+<div class="bg-error-container rounded-full p-2 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-error-container">warning</span>
+</div>
+<span class="font-label-caps text-label-caps text-error uppercase">High Priority</span>
+</div>
+<div>
+<div class="font-display text-display text-on-background">15</div>
+<div class="font-body-md text-body-md text-on-surface-variant text-sm">High-Risk Cases</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-card-padding shadow-[0_4px_12px_rgba(0,0,0,0.08)] border border-secondary-container relative overflow-hidden flex flex-col justify-between h-32 hover:shadow-md transition-shadow">
+<div class="absolute top-0 left-0 w-full h-1 bg-secondary"></div>
+<div class="flex justify-between items-start">
+<div class="bg-secondary-container rounded-full p-2 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container">check_circle</span>
+</div>
+<span class="font-label-caps text-label-caps text-secondary uppercase">Completed</span>
+</div>
+<div>
+<div class="font-display text-display text-on-surface">124</div>
+<div class="font-body-md text-body-md text-on-surface-variant text-sm">Verified Today</div>
+</div>
+</div>
+</div>
+<!-- Main View: Table -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.08)] border border-surface-container-high overflow-hidden">
+<div class="p-card-padding border-b border-surface-container-high bg-surface-bright flex justify-between items-center">
+<h2 class="font-headline-md text-headline-md text-on-surface">Cases Awaiting Verification</h2>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="pl-9 pr-4 py-2 rounded-lg border border-outline-variant bg-surface text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full md:w-64 transition-all" placeholder="Search Case ID..." type="text"/>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label-caps text-label-caps border-b border-surface-container-high">
+<th class="p-4 py-3 font-semibold">Case ID</th>
+<th class="p-4 py-3 font-semibold">Crop</th>
+<th class="p-4 py-3 font-semibold">AI Diagnosis</th>
+<th class="p-4 py-3 font-semibold">Confidence</th>
+<th class="p-4 py-3 font-semibold">Date</th>
+<th class="p-4 py-3 font-semibold text-center">Action</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md text-on-surface divide-y divide-surface-container">
+<tr class="hover:bg-surface-container-lowest/50 transition-colors group">
+<td class="p-4 font-medium text-primary">#CA-8924</td>
+<td class="p-4">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary text-sm">eco</span>
+</div>
+                                     Wheat
+                                </div>
+</td>
+<td class="p-4"><span class="bg-error-container text-on-error-container px-2 py-1 rounded text-sm font-medium">Rust (Severe)</span></td>
+<td class="p-4">
+<div class="flex items-center gap-2">
+<div class="w-16 h-2 bg-surface-variant rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[94%]"></div>
+</div>
+<span class="text-sm font-medium">94%</span>
+</div>
+</td>
+<td class="p-4 text-on-surface-variant text-sm">Oct 24, 09:15 AM</td>
+<td class="p-4 text-center">
+<button class="text-primary hover:bg-primary-container hover:text-on-primary-container px-3 py-1.5 rounded-lg transition-colors font-medium text-sm flex items-center gap-1 mx-auto">
+                                    View <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest/50 transition-colors group bg-error-container/20">
+<td class="p-4 font-medium text-primary">#CA-8925</td>
+<td class="p-4">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary text-sm">grass</span>
+</div>
+                                     Maize
+                                </div>
+</td>
+<td class="p-4"><span class="bg-error-container text-on-error-container px-2 py-1 rounded text-sm font-medium">Fall Armyworm</span></td>
+<td class="p-4">
+<div class="flex items-center gap-2">
+<div class="w-16 h-2 bg-surface-variant rounded-full overflow-hidden">
+<div class="bg-secondary h-full w-[88%]"></div>
+</div>
+<span class="text-sm font-medium">88%</span>
+</div>
+</td>
+<td class="p-4 text-on-surface-variant text-sm">Oct 24, 09:42 AM</td>
+<td class="p-4 text-center">
+<button class="text-primary hover:bg-primary-container hover:text-on-primary-container px-3 py-1.5 rounded-lg transition-colors font-medium text-sm flex items-center gap-1 mx-auto">
+                                    View <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest/50 transition-colors group">
+<td class="p-4 font-medium text-primary">#CA-8928</td>
+<td class="p-4">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary text-sm">yard</span>
+</div>
+                                     Tomato
+                                </div>
+</td>
+<td class="p-4"><span class="bg-surface-container-high text-on-surface px-2 py-1 rounded text-sm font-medium">Early Blight</span></td>
+<td class="p-4">
+<div class="flex items-center gap-2">
+<div class="w-16 h-2 bg-surface-variant rounded-full overflow-hidden">
+<div class="bg-tertiary-container h-full w-[65%]"></div>
+</div>
+<span class="text-sm font-medium">65%</span>
+</div>
+</td>
+<td class="p-4 text-on-surface-variant text-sm">Oct 24, 10:05 AM</td>
+<td class="p-4 text-center">
+<button class="text-primary hover:bg-primary-container hover:text-on-primary-container px-3 py-1.5 rounded-lg transition-colors font-medium text-sm flex items-center gap-1 mx-auto">
+                                    View <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest/50 transition-colors group">
+<td class="p-4 font-medium text-primary">#CA-8930</td>
+<td class="p-4">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary text-sm">local_florist</span>
+</div>
+                                     Cotton
+                                </div>
+</td>
+<td class="p-4"><span class="bg-surface-container-high text-on-surface px-2 py-1 rounded text-sm font-medium">Aphids</span></td>
+<td class="p-4">
+<div class="flex items-center gap-2">
+<div class="w-16 h-2 bg-surface-variant rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[91%]"></div>
+</div>
+<span class="text-sm font-medium">91%</span>
+</div>
+</td>
+<td class="p-4 text-on-surface-variant text-sm">Oct 24, 11:30 AM</td>
+<td class="p-4 text-center">
+<button class="text-primary hover:bg-primary-container hover:text-on-primary-container px-3 py-1.5 rounded-lg transition-colors font-medium text-sm flex items-center gap-1 mx-auto">
+                                    View <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 border-t border-surface-container-high bg-surface-bright flex justify-between items-center text-sm text-on-surface-variant">
+<span>Showing 1 to 4 of 42 entries</span>
+<div class="flex gap-1">
+<button class="p-1 rounded hover:bg-surface-container disabled:opacity-50" disabled=""><span class="material-symbols-outlined text-sm">chevron_left</span></button>
+<button class="p-1 px-3 rounded bg-primary-container text-on-primary-container font-medium">1</button>
+<button class="p-1 px-3 rounded hover:bg-surface-container">2</button>
+<button class="p-1 px-3 rounded hover:bg-surface-container">3</button>
+<button class="p-1 rounded hover:bg-surface-container"><span class="material-symbols-outlined text-sm">chevron_right</span></button>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-2 pt-2 bg-surface dark:bg-inverse-surface shadow-[0_-4px_12px_rgba(0,0,0,0.08)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-caps text-label-caps mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-label-caps text-label-caps mt-1">Report</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined">grass</span>
+<span class="font-label-caps text-label-caps mt-1">My Crops</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container dark:bg-primary-container dark:text-on-primary-container rounded-full px-4 py-1 scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">description</span>
+<span class="font-label-caps text-label-caps mt-1">Reports</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-caps text-label-caps mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AgriDetect - Early Warning Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline-variant": "#c0c9bb",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed-variant": "#0c5216",
+                        "on-primary-fixed": "#002203",
+                        "secondary-fixed-dim": "#78dc77",
+                        "on-secondary-fixed": "#002204",
+                        "primary-fixed-dim": "#91d78a",
+                        "outline": "#717a6d",
+                        "surface": "#f4faff",
+                        "on-tertiary-container": "#c6c7af",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#005313",
+                        "tertiary-fixed-dim": "#c8c8b0",
+                        "on-background": "#111d23",
+                        "surface-container-low": "#e9f6fd",
+                        "error-container": "#ffdad6",
+                        "on-primary-container": "#90d689",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#e4e4cc",
+                        "surface-variant": "#d7e4ec",
+                        "background": "#f4faff",
+                        "tertiary": "#3a3c2b",
+                        "inverse-surface": "#263238",
+                        "primary-fixed": "#acf4a4",
+                        "on-surface": "#111d23",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#474836",
+                        "surface-tint": "#2a6b2c",
+                        "secondary": "#006e1c",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#d7e4ec",
+                        "surface-dim": "#cfdce4",
+                        "tertiary-container": "#525341",
+                        "secondary-container": "#91f78e",
+                        "on-surface-variant": "#41493e",
+                        "primary": "#00450d",
+                        "surface-container": "#e3f0f8",
+                        "inverse-primary": "#91d78a",
+                        "inverse-on-surface": "#e6f3fb",
+                        "surface-container-high": "#ddeaf2",
+                        "on-tertiary-fixed": "#1b1d0e",
+                        "on-secondary-container": "#00731e",
+                        "secondary-fixed": "#94f990",
+                        "primary-container": "#1b5e20",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#f4faff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "card-padding": "20px",
+                        "container-margin": "24px",
+                        "unit": "8px",
+                        "touch-target-min": "48px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "display": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "status-number": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "display": ["42px", { "lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "status-number": ["20px", { "lineHeight": "24px", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        /* Subtle pulsing for critical alerts */
+        @keyframes subtle-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(186, 26, 26, 0.2); }
+            70% { box-shadow: 0 0 0 10px rgba(186, 26, 26, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(186, 26, 26, 0); }
+        }
+        .animate-critical-pulse {
+            animation: subtle-pulse 2s infinite;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex">
+<!-- NavigationDrawer (Desktop) -->
+<nav class="hidden md:flex flex-col h-screen border-r border-outline-variant bg-surface-container-low w-64 fixed left-0 top-0 shadow-md z-40">
+<!-- Header -->
+<div class="p-container-margin border-b border-outline-variant flex items-center gap-4">
+<img class="w-12 h-12 rounded-full object-cover shadow-sm" data-alt="A professional headshot of a district agricultural officer in a well-lit office setting. The officer is wearing a light green shirt, looking directly at the camera with a confident, reassuring expression. The lighting is bright and clear, reflecting a modern, efficient government environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxb7pElwb--6vDSePuXDKWuQabspyra_nJSoGW-mubIVSn56F_-rOpWGvvwoG1i7lREIET40mLUuVlHGrq71zFn6JkR_h9olGKwT8PHoJbFnYsVH6qOBV2vzWneoeoMxv67m4jlTsQvWC0TB6QAsJw1PWttIZOpZ0Juo-UOCXOewnPmmVmik0rfTAa2ayoLsY5U0404xXn3cXVj6i75FVSLs8C6IVbq8CP5WRrQ-gZ_BTqq7ChJFEVvg"/>
+<div>
+<h2 class="font-headline-md text-headline-md text-primary" style="font-size: 18px; line-height: 24px;">AgriDetect Admin</h2>
+<p class="font-body-md text-body-md text-on-surface-variant" style="font-size: 14px; line-height: 20px;">District Officer</p>
+<div class="flex items-center gap-1 mt-1">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-label-caps text-label-caps text-secondary" style="text-transform: none; font-size: 10px;">Active Now</span>
+</div>
+</div>
+</div>
+<!-- Links -->
+<div class="flex-1 py-4 flex flex-col gap-2 overflow-y-auto">
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-highest transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-highest transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">location_on</span>
+<span>Hotspots</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-highest transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">insights</span>
+<span>Analytics</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-highest transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">folder_open</span>
+<span>Cases</span>
+</a>
+<!-- ACTIVE NAV -->
+<a class="flex items-center gap-3 bg-secondary-container text-on-secondary-container rounded-lg px-4 py-3 mx-2 translate-x-1 transition-transform font-bold shadow-sm" href="#">
+<span class="material-symbols-outlined fill">warning</span>
+<span>Early Warnings</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-highest transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">summarize</span>
+<span>Reports</span>
+</a>
+</div>
+<div class="p-4 border-t border-outline-variant">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-caps text-label-caps">SYSTEM STATUS</span>
+<span class="material-symbols-outlined text-secondary text-sm">cloud_done</span>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="ml-64 flex-1 flex flex-col h-screen overflow-hidden">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-container-margin h-touch-target-min w-full bg-surface shadow-sm border-b border-outline-variant/30 flex-shrink-0">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined">agriculture</span>
+<h1 class="font-headline-md text-headline-md font-bold tracking-tight">AgriDetect</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="bg-surface-container h-10 pl-10 pr-4 rounded-full border-none focus:ring-2 focus:ring-primary text-sm w-64 placeholder-on-surface-variant" placeholder="Search alerts..." type="text"/>
+</div>
+<button class="relative p-2 text-primary hover:bg-surface-container-low transition-colors rounded-full">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1 right-1 w-2.5 h-2.5 bg-error rounded-full border-2 border-surface"></span>
+</button>
+</div>
+</header>
+<!-- Scrollable Canvas -->
+<div class="flex-1 overflow-y-auto p-container-margin bg-background">
+<div class="flex justify-between items-end mb-6">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Early Warning Center</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Manage, dispatch, and track regional agricultural threats.</p>
+</div>
+<div class="flex gap-2">
+<button class="h-10 px-4 flex items-center gap-2 border border-outline rounded-full text-on-surface font-body-md hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+                        Filter
+                    </button>
+<button class="h-10 px-4 flex items-center gap-2 bg-primary text-on-primary rounded-full font-body-md hover:opacity-90 transition-opacity shadow-sm">
+<span class="material-symbols-outlined text-sm">add</span>
+                        Manual Alert
+                    </button>
+</div>
+</div>
+<!-- Main Layout Grid -->
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-gutter">
+<!-- Left Column: Active Warnings Feed -->
+<div class="xl:col-span-2 flex flex-col gap-gutter">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2" style="font-size: 20px;">Active Warnings</h3>
+<!-- CRITICAL ALERT CARD -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.08)] border border-error-container overflow-hidden animate-critical-pulse relative">
+<!-- Top Risk Bar -->
+<div class="h-2 w-full bg-error"></div>
+<div class="p-card-padding flex flex-col md:flex-row gap-6">
+<!-- Visual/Status -->
+<div class="flex flex-col items-center justify-center bg-error-container/30 rounded-lg p-4 min-w-[120px]">
+<span class="material-symbols-outlined text-error text-4xl mb-2 fill">warning</span>
+<span class="font-label-caps text-label-caps text-error bg-error-container px-2 py-1 rounded">CRITICAL</span>
+</div>
+<!-- Content -->
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline-md text-headline-md text-on-surface" style="font-size: 20px;">Tomato Late Blight Outbreak</h4>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                                            Village A Sector
+                                        </p>
+</div>
+<span class="font-label-caps text-label-caps text-error bg-error-container px-2 py-1 rounded">24 cases / 48h</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface mt-3">
+                                    Rapid spread detected across multiple adjacent farms. High humidity accelerating spore dispersion. Immediate intervention required to prevent total crop failure in the sector.
+                                </p>
+<!-- Action Buttons -->
+<div class="mt-4 flex flex-wrap gap-3">
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg font-body-md flex items-center gap-2 hover:opacity-90 shadow-sm transition-opacity">
+<span class="material-symbols-outlined text-sm">campaign</span>
+                                        Broadcast Advisory
+                                    </button>
+<button class="border-2 border-primary text-primary px-4 py-2 rounded-lg font-body-md flex items-center gap-2 hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-sm">local_shipping</span>
+                                        Dispatch Team
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+<!-- WARNING ALERT CARD -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.08)] border border-outline-variant/50 overflow-hidden relative">
+<!-- Top Risk Bar -->
+<div class="h-2 w-full bg-[#f59e0b]"></div>
+<div class="p-card-padding flex flex-col md:flex-row gap-6">
+<!-- Visual/Status -->
+<div class="flex flex-col items-center justify-center bg-[#fef3c7] rounded-lg p-4 min-w-[120px]">
+<span class="material-symbols-outlined text-[#d97706] text-4xl mb-2">thermostat</span>
+<span class="font-label-caps text-label-caps text-[#d97706] bg-[#fde68a] px-2 py-1 rounded">WARNING</span>
+</div>
+<!-- Content -->
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline-md text-headline-md text-on-surface" style="font-size: 20px;">Increasing Risk of Wheat Rust</h4>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                                            District B
+                                        </p>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant bg-surface-container px-2 py-1 rounded">Env. Favorable</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface mt-3">
+                                    Prolonged periods of leaf wetness and moderate temperatures are creating optimal conditions for rust infection. Proactive fungicide application recommended for vulnerable cultivars.
+                                </p>
+<!-- Action Buttons -->
+<div class="mt-4 flex flex-wrap gap-3">
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg font-body-md flex items-center gap-2 hover:opacity-90 shadow-sm transition-opacity">
+<span class="material-symbols-outlined text-sm">campaign</span>
+                                        Broadcast Advisory
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Context/Action Panel -->
+<div class="flex flex-col gap-gutter">
+<!-- Map View -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col">
+<div class="p-4 border-b border-outline-variant/30 flex justify-between items-center bg-surface-container-low">
+<h3 class="font-headline-md text-headline-md text-on-surface" style="font-size: 18px;">Affected Area Map</h3>
+<button class="text-primary hover:bg-primary/10 p-1 rounded transition-colors">
+<span class="material-symbols-outlined">fullscreen</span>
+</button>
+</div>
+<div class="relative h-64 bg-surface-variant">
+<!-- Map Image Placeholder -->
+<img class="w-full h-full object-cover" data-alt="A stylized, modern digital map showing an agricultural region. Topographic lines are subtle. There is a prominent red 'hotspot' overlay area indicating an outbreak zone in 'Village A', and a yellow shaded region indicating a warning zone in 'District B'. The map uses a clean, light-mode color palette with soft greens, whites, and greys, contrasting with the bright warning colors. High tech UI elements." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAn6CBY_FcwabtpvQOIBEFyEUgM4_Sl6_6ga2jGRcGyemexSZspsqyqvDk5KIkdcX2SahWhvSj37eP1PXRMdXeM3H4NLQybqteioDkLMfc0TZyw7kj8K6Z97m_Wj-LRAgCkGUa_KFMCI1zboZTx42n6Bp0eT-RGbwTB3C7eazvhGsuAGZ5MAtrw4q_JKQbA1rgVM98Gre62cOXRmJ-lNwDKCiJk70J7fdztfPlHVaNoU21Ne8foUqGXMg"/>
+<!-- Map Overlays -->
+<div class="absolute inset-0 p-4 pointer-events-none flex flex-col justify-end">
+<div class="bg-surface-container-lowest/90 backdrop-blur p-3 rounded-lg shadow-sm border border-outline-variant/50 max-w-[200px] pointer-events-auto">
+<h5 class="font-label-caps text-label-caps text-on-surface mb-1">Village A Sector</h5>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-error"></div>
+<span class="font-body-md text-body-md text-on-surface" style="font-size: 14px;">High Density</span>
+</div>
+</div>
+</div>
+</div>
+<div class="p-4">
+<button class="w-full border-2 border-primary text-primary px-4 py-2 rounded-lg font-body-md flex items-center justify-center gap-2 hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-sm">map</span>
+                                Open Full Interactive Map
+                            </button>
+</div>
+</div>
+<!-- Dispatch Status -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.08)] p-card-padding">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-4" style="font-size: 18px;">Active Dispatches</h3>
+<div class="flex items-center justify-between p-3 bg-surface-container rounded-lg border border-outline-variant/30">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined">group</span>
+</div>
+<div>
+<p class="font-body-md text-body-md text-on-surface font-semibold" style="font-size: 14px;">Team Alpha</p>
+<p class="font-body-md text-body-md text-on-surface-variant" style="font-size: 12px;">En route to Village A</p>
+</div>
+</div>
+<span class="font-label-caps text-label-caps text-secondary bg-secondary-container px-2 py-1 rounded">ETA 15m</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Historical Alerts Log (Bottom) -->
+<div class="mt-8 bg-surface-container-lowest rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.08)] overflow-hidden">
+<div class="p-card-padding border-b border-outline-variant/30 flex justify-between items-center bg-surface-container-low">
+<h3 class="font-headline-md text-headline-md text-on-surface" style="font-size: 18px;">Historical Alerts Log</h3>
+<button class="text-primary text-sm font-semibold hover:underline">View All</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-lowest border-b border-outline-variant/50">
+<th class="p-4 font-label-caps text-label-caps text-on-surface-variant">DATE</th>
+<th class="p-4 font-label-caps text-label-caps text-on-surface-variant">TYPE</th>
+<th class="p-4 font-label-caps text-label-caps text-on-surface-variant">LOCATION</th>
+<th class="p-4 font-label-caps text-label-caps text-on-surface-variant">RESOLUTION</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md text-on-surface">
+<tr class="border-b border-outline-variant/20 hover:bg-surface-container-low transition-colors">
+<td class="p-4 text-on-surface-variant">Oct 24, 2023</td>
+<td class="p-4"><span class="bg-[#dbeafe] text-[#1e40af] px-2 py-1 rounded text-xs font-semibold">INFO</span> Frost Warning</td>
+<td class="p-4">Northern Highlands</td>
+<td class="p-4 text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-sm">check_circle</span> Resolved</td>
+</tr>
+<tr class="border-b border-outline-variant/20 hover:bg-surface-container-low transition-colors">
+<td class="p-4 text-on-surface-variant">Oct 18, 2023</td>
+<td class="p-4"><span class="bg-[#fef3c7] text-[#d97706] px-2 py-1 rounded text-xs font-semibold">WARN</span> Locust Sighting</td>
+<td class="p-4">Eastern Border</td>
+<td class="p-4 text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-sm">check_circle</span> Contained</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="p-4 text-on-surface-variant">Sep 05, 2023</td>
+<td class="p-4"><span class="bg-error-container text-error px-2 py-1 rounded text-xs font-semibold">CRIT</span> Severe Drought</td>
+<td class="p-4">Sector 4</td>
+<td class="p-4 text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-sm">archive</span> Archived</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Bottom spacing -->
+<div class="h-12"></div>
+</div>
+</main>
+</body></html>
