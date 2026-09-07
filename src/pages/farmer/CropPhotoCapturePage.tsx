@@ -1,46 +1,57 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
+import { t } from '../../utils/translations';
 
 export const CropPhotoCapturePage: React.FC = () => {
   const navigate = useNavigate();
-  const { updateReportDraft, showToast } = useApp();
+  const { updateReportDraft, showToast, language } = useApp();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
-
-  const sampleImages = [
-    'https://lh3.googleusercontent.com/aida-public/AB6AXuBCYJU9JFjL_Dof0tJYG5kIteTjcoTmraHTexpYSIRnD9Fyy8l0uk186dIFMwLfMUfNE-u3f3jkmdkmiHiHxkBRZoCXN0DcWcWJGQca27AhOw7Qvz_lX2h_Tbz9CJ6F4-5Xr3C5Wz2sBWhLm4Cp90SfDUpZiR-jFpewqujKmNfreiByhIEs1WF2x8uw6FLwUHczI6tAhL5v84MhfoD6SOaD2YRwkRJCRYPL3z_PG_slCC-wVOIF-nsT1Q',
-    'https://lh3.googleusercontent.com/aida-public/AB6AXuBCx62hAVg7rL9SBsqf_O0MLg_Hh5YR4y0MVmWuLqurxX6EbQBkYEMOzgu6o_6YeXy6FEfQJDiNjtvjvM0uB7LYW7dMqdmcY-rRcM79oS-x5zIxCYJ_sqzR1xt6_74QLU5BrGHX_fQbFEHYC3jQ4V4why5t5Y0FrvtRDW5YK7qmxi108Io3mNqyGsScVZMKPu_HRWgdgxalWF7FlmbM3SXctCHqVd3Qts4GoWz_i8GMyK1hSkfK_-rWEA',
-  ];
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
   const handleCaptureSimulated = () => {
-    const selected = sampleImages[0];
-    setPhotoPreview(selected);
-    updateReportDraft({ imageUrl: selected });
-    showToast('Photo captured successfully! Review or Submit for AI Analysis.');
+    // Simulate taking a photo
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setUploadedFile(file);
       const reader = new FileReader();
       reader.onload = () => {
         const result = reader.result as string;
         setPhotoPreview(result);
         updateReportDraft({ imageUrl: result });
-        showToast('Photo uploaded from device storage.');
+        showToast(language === 'hi' ? 'फोटो अपलोड हो गई।' : 'Photo uploaded from device storage.');
       };
       reader.readAsDataURL(file);
     }
   };
 
   const handleSubmit = () => {
+    if (!photoPreview) {
+      showToast(language === 'hi' ? 'कृपया पहले फोटो लें।' : 'Please capture a photo first.');
+      return;
+    }
     navigate('/farmer/analyzing');
   };
 
   const handleVoiceNote = () => {
     updateReportDraft({ voiceNote: true });
-    showToast('Voice note recorded: "Yellow spots appeared on tomato leaves 3 days ago."');
+    showToast(language === 'hi' 
+      ? 'आवाज़ नोट रिकॉर्ड किया गया: "टमाटर के पत्तों पर 3 दिन पहले पीले धब्बे दिखाई दिए।"'
+      : 'Voice note recorded: "Yellow spots appeared on tomato leaves 3 days ago."'
+    );
+  };
+
+  const handleRetake = () => {
+    setPhotoPreview(null);
+    setUploadedFile(null);
+    showToast(language === 'hi' ? 'फिर से फोटो लेने के लिए तैयार।' : 'Camera reset for retake.');
   };
 
   return (
@@ -48,10 +59,12 @@ export const CropPhotoCapturePage: React.FC = () => {
       {/* Header */}
       <div className="mb-2">
         <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface font-bold">
-          Report Crop Issue
+          {t('reportProblem', language)}
         </h2>
         <p className="font-body-md text-body-md text-on-surface-variant mt-2">
-          Capture clear photos of the affected area for accurate AI analysis.
+          {language === 'hi' 
+            ? 'सटीक AI विश्लेषण के लिए प्रभावित क्षेत्र की स्पष्ट तस्वीरें लें।'
+            : 'Capture clear photos of the affected area for accurate AI analysis.'}
         </p>
       </div>
 
@@ -96,14 +109,16 @@ export const CropPhotoCapturePage: React.FC = () => {
                   photo_camera
                 </span>
               </button>
-              <p className="font-headline-md text-[18px] text-on-surface font-semibold mb-1">Take Photo</p>
+              <p className="font-headline-md text-[18px] text-on-surface font-semibold mb-1">
+                {t('capturePhoto', language)}
+              </p>
               <div className="mt-4 border-t border-outline-variant/30 pt-4 w-full">
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   className="text-primary hover:text-primary-container font-body-md text-body-md flex items-center gap-2 justify-center w-full transition-colors cursor-pointer"
                 >
                   <span className="material-symbols-outlined">image</span>
-                  <span>Upload from Gallery</span>
+                  <span>{t('uploadPhoto', language)}</span>
                 </button>
               </div>
             </div>
@@ -122,7 +137,7 @@ export const CropPhotoCapturePage: React.FC = () => {
             <span className="material-symbols-outlined text-secondary" style={{ fontVariationSettings: "'FILL' 1" }}>
               lightbulb
             </span>
-            How to take a good photo
+            {language === 'hi' ? 'अच्छी फोटो कैसे लें' : 'How to take a good photo'}
           </h3>
           <ul className="space-y-4">
             <li className="flex items-start gap-3">
@@ -130,8 +145,14 @@ export const CropPhotoCapturePage: React.FC = () => {
                 <span className="material-symbols-outlined text-on-secondary-container text-sm">eco</span>
               </div>
               <div>
-                <p className="font-body-md text-body-md font-semibold text-on-surface">Keep leaf clearly visible</p>
-                <p className="font-body-md text-[14px] text-on-surface-variant">Ensure the affected part is in focus and not blurry.</p>
+                <p className="font-body-md text-body-md font-semibold text-on-surface">
+                  {language === 'hi' ? 'पत्ती स्पष्ट रूप से दिखाई दे' : 'Keep leaf clearly visible'}
+                </p>
+                <p className="font-body-md text-[14px] text-on-surface-variant">
+                  {language === 'hi' 
+                    ? 'सुनिश्चित करें कि प्रभावित हिस्सा फोकस में है और धुंधला नहीं है।'
+                    : 'Ensure the affected part is in focus and not blurry.'}
+                </p>
               </div>
             </li>
             <li className="flex items-start gap-3">
@@ -139,8 +160,14 @@ export const CropPhotoCapturePage: React.FC = () => {
                 <span className="material-symbols-outlined text-on-secondary-container text-sm">wb_sunny</span>
               </div>
               <div>
-                <p className="font-body-md text-body-md font-semibold text-on-surface">Use good lighting</p>
-                <p className="font-body-md text-[14px] text-on-surface-variant">Avoid harsh shadows or direct glare on the leaf surface.</p>
+                <p className="font-body-md text-body-md font-semibold text-on-surface">
+                  {language === 'hi' ? 'अच्छी रोशनी का उपयोग करें' : 'Use good lighting'}
+                </p>
+                <p className="font-body-md text-[14px] text-on-surface-variant">
+                  {language === 'hi'
+                    ? 'पत्ती की सतह पर कठोर छाया या सीधी चमक से बचें।'
+                    : 'Avoid harsh shadows or direct glare on the leaf surface.'}
+                </p>
               </div>
             </li>
             <li className="flex items-start gap-3">
@@ -148,8 +175,14 @@ export const CropPhotoCapturePage: React.FC = () => {
                 <span className="material-symbols-outlined text-on-secondary-container text-sm">center_focus_strong</span>
               </div>
               <div>
-                <p className="font-body-md text-body-md font-semibold text-on-surface">Capture affected area closely</p>
-                <p className="font-body-md text-[14px] text-on-surface-variant">Fill the frame with the problem area for better AI detection.</p>
+                <p className="font-body-md text-body-md font-semibold text-on-surface">
+                  {language === 'hi' ? 'प्रभावित क्षेत्र को पास से कैप्चर करें' : 'Capture affected area closely'}
+                </p>
+                <p className="font-body-md text-[14px] text-on-surface-variant">
+                  {language === 'hi'
+                    ? 'बेहतर AI पहचान के लिए समस्या क्षेत्र से फ्रेम भरें।'
+                    : 'Fill the frame with the problem area for better AI detection.'}
+                </p>
               </div>
             </li>
           </ul>
@@ -164,26 +197,26 @@ export const CropPhotoCapturePage: React.FC = () => {
             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
               <span className="material-symbols-outlined text-primary text-2xl">mic</span>
             </div>
-            <span className="font-body-md text-body-md font-medium text-center">Describe the problem by voice</span>
+            <span className="font-body-md text-body-md font-medium text-center">
+              {language === 'hi' ? 'आवाज़ से समस्या बताएं' : 'Describe the problem by voice'}
+            </span>
           </button>
 
           {/* Post-Capture Actions */}
           <div className="flex gap-4 mt-auto">
             <button
-              onClick={() => {
-                setPhotoPreview(null);
-                showToast('Camera reset for retake.');
-              }}
+              onClick={handleRetake}
               className="flex-1 border-2 border-primary text-primary hover:bg-primary/5 rounded-full py-3 px-6 font-body-md text-body-md font-bold transition-colors text-center h-touch-target-min flex items-center justify-center gap-2 cursor-pointer"
             >
               <span className="material-symbols-outlined text-sm">replay</span>
-              Retake
+              {language === 'hi' ? 'फिर से लें' : 'Retake'}
             </button>
             <button
               onClick={handleSubmit}
-              className="flex-1 bg-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container rounded-full py-3 px-6 font-body-md text-body-md font-bold transition-colors shadow-md text-center h-touch-target-min flex items-center justify-center gap-2 cursor-pointer"
+              disabled={!photoPreview}
+              className={`flex-1 ${photoPreview ? 'bg-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container' : 'bg-surface-container-high text-on-surface-variant cursor-not-allowed'} rounded-full py-3 px-6 font-body-md text-body-md font-bold transition-colors shadow-md text-center h-touch-target-min flex items-center justify-center gap-2`}
             >
-              <span>Submit Photo</span>
+              <span>{language === 'hi' ? 'फोटो जमा करें' : 'Submit Photo'}</span>
               <span className="material-symbols-outlined text-sm">send</span>
             </button>
           </div>

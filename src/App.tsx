@@ -14,6 +14,7 @@ import { UncertainDiagnosisPage } from './pages/farmer/UncertainDiagnosisPage';
 import { RiskAnalysisSummaryPage } from './pages/farmer/RiskAnalysisSummaryPage';
 import { FarmerAdvisoryGuidePage } from './pages/farmer/FarmerAdvisoryGuidePage';
 import { CropHealthProgressPage } from './pages/farmer/CropHealthProgressPage';
+import { WeatherForecastPage } from './pages/farmer/WeatherForecastPage';
 
 // Expert Pages
 import { ExpertDashboardPage } from './pages/expert/ExpertDashboardPage';
@@ -45,6 +46,7 @@ export const App: React.FC = () => {
             <Route path="/farmer/risk-analysis" element={<RiskAnalysisSummaryPage />} />
             <Route path="/farmer/advisory" element={<FarmerAdvisoryGuidePage />} />
             <Route path="/farmer/progress" element={<CropHealthProgressPage />} />
+            <Route path="/farmer/weather" element={<WeatherForecastPage />} />
 
             {/* Expert Routes */}
             <Route path="/expert/dashboard" element={<ExpertDashboardPage />} />

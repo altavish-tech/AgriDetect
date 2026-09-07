@@ -1,10 +1,18 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
+import { t } from '../../utils/translations';
 
 export const FarmerHomePage: React.FC = () => {
   const navigate = useNavigate();
-  const { showToast } = useApp();
+  const { language } = useApp();
+
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return t('goodMorning', language);
+    if (hour < 17) return t('goodAfternoon', language);
+    return t('goodEvening', language);
+  };
 
   return (
     <div className="p-container-margin max-w-5xl mx-auto space-y-gutter w-full">
@@ -12,9 +20,11 @@ export const FarmerHomePage: React.FC = () => {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary font-bold">
-            Good Morning, Ramesh 👋
+            {getGreeting()}, Ramesh 👋
           </h1>
-          <p className="text-on-surface-variant font-body-md text-sm mt-1">Siwan District, Bihar • Farm ID #BR-8921</p>
+          <p className="text-on-surface-variant font-body-md text-sm mt-1">
+            {language === 'hi' ? 'सीवान जिला, बिहार • फार्म ID #BR-8921' : 'Siwan District, Bihar • Farm ID #BR-8921'}
+          </p>
         </div>
       </div>
 
@@ -26,8 +36,8 @@ export const FarmerHomePage: React.FC = () => {
         <span className="material-symbols-outlined text-[48px] mb-2 group-hover:scale-110 transition-transform">
           add_a_photo
         </span>
-        <span className="font-headline-md text-headline-md font-bold">Report Crop Problem</span>
-        <span className="font-body-md text-body-md opacity-90">Take a photo to analyze disease</span>
+        <span className="font-headline-md text-headline-md font-bold">{t('reportCropProblem', language)}</span>
+        <span className="font-body-md text-body-md opacity-90">{t('takePhotoToAnalyze', language)}</span>
       </button>
 
       {/* Weather Widget */}
@@ -37,12 +47,16 @@ export const FarmerHomePage: React.FC = () => {
             sunny
           </span>
           <div>
-            <div className="font-body-lg text-body-lg text-on-surface font-semibold">Sunny, 32°C</div>
-            <div className="font-body-md text-body-md text-on-surface-variant">Siwan, Bihar</div>
+            <div className="font-body-lg text-body-lg text-on-surface font-semibold">
+              {t('sunny', language)}, 32°C
+            </div>
+            <div className="font-body-md text-body-md text-on-surface-variant">
+              {language === 'hi' ? 'सीवान, बिहार' : 'Siwan, Bihar'}
+            </div>
           </div>
         </div>
         <div className="text-right">
-          <div className="font-label-caps text-label-caps text-primary">Precipitation</div>
+          <div className="font-label-caps text-label-caps text-primary">{t('precipitation', language)}</div>
           <div className="font-status-number text-status-number text-on-surface">10%</div>
         </div>
       </div>
@@ -57,18 +71,18 @@ export const FarmerHomePage: React.FC = () => {
           <div className="w-12 h-12 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center">
             <span className="material-symbols-outlined filled">grass</span>
           </div>
-          <span className="font-label-caps text-label-caps text-on-surface">My Crops</span>
+          <span className="font-label-caps text-label-caps text-on-surface">{t('myCrops', language)}</span>
         </button>
 
         {/* Weather Forecast */}
         <button
-          onClick={() => showToast('Weather: Clear sky for the next 48 hours. Favorable spraying conditions.')}
+          onClick={() => navigate('/farmer/weather')}
           className="bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-card-padding flex flex-col items-center justify-center gap-3 ambient-shadow hover:bg-surface-container-low active:bg-surface-variant transition-colors"
         >
           <div className="w-12 h-12 rounded-full bg-surface-container-high text-on-surface flex items-center justify-center">
             <span className="material-symbols-outlined">partly_cloudy_day</span>
           </div>
-          <span className="font-label-caps text-label-caps text-on-surface">Weather Forecast</span>
+          <span className="font-label-caps text-label-caps text-on-surface">{t('weatherForecast', language)}</span>
         </button>
 
         {/* Current Risk */}
@@ -80,7 +94,7 @@ export const FarmerHomePage: React.FC = () => {
           <div className="w-12 h-12 rounded-full bg-error-container text-on-error-container flex items-center justify-center">
             <span className="material-symbols-outlined filled">warning</span>
           </div>
-          <span className="font-label-caps text-label-caps text-on-surface">Current Risk</span>
+          <span className="font-label-caps text-label-caps text-on-surface">{t('currentRisk', language)}</span>
         </button>
 
         {/* My Reports */}
@@ -91,13 +105,13 @@ export const FarmerHomePage: React.FC = () => {
           <div className="w-12 h-12 rounded-full bg-tertiary-container text-on-tertiary-container flex items-center justify-center">
             <span className="material-symbols-outlined">description</span>
           </div>
-          <span className="font-label-caps text-label-caps text-on-surface">My Reports</span>
+          <span className="font-label-caps text-label-caps text-on-surface">{t('myReports', language)}</span>
         </button>
       </div>
 
       {/* Recent Update Section */}
       <section className="mt-8">
-        <h2 className="font-headline-md text-headline-md text-on-background mb-4 font-bold">Recent Update</h2>
+        <h2 className="font-headline-md text-headline-md text-on-background mb-4 font-bold">{t('recentUpdate', language)}</h2>
         <div className="bg-surface-container-lowest rounded-xl p-card-padding ambient-shadow border border-outline-variant/40 relative overflow-hidden flex flex-col md:flex-row gap-6 items-start md:items-center">
           {/* Risk Bar at top edge */}
           <div className="absolute top-0 left-0 w-full h-[6px] bg-[#f59e0b]"></div>
@@ -112,16 +126,22 @@ export const FarmerHomePage: React.FC = () => {
             <div className="flex justify-between items-start mb-2">
               <div>
                 <span className="inline-block px-2 py-0.5 rounded bg-[#fef3c7] text-[#92400e] font-label-caps text-label-caps mb-1 font-bold">
-                  High Risk
+                  {t('high', language)} {language === 'hi' ? 'जोखिम' : 'Risk'}
                 </span>
-                <h3 className="font-body-lg text-body-lg font-bold text-on-surface">Tomato Early Blight</h3>
+                <h3 className="font-body-lg text-body-lg font-bold text-on-surface">
+                  {language === 'hi' ? 'टमाटर अर्ली ब्लाइट' : 'Tomato Early Blight'}
+                </h3>
               </div>
-              <span className="font-label-caps text-label-caps text-on-surface-variant">Yesterday</span>
+              <span className="font-label-caps text-label-caps text-on-surface-variant">
+                {language === 'hi' ? 'कल' : 'Yesterday'}
+              </span>
             </div>
-            <p className="font-body-md text-body-md text-on-surface-variant mb-4">Field Sector 4 • Initial detection via photo</p>
+            <p className="font-body-md text-body-md text-on-surface-variant mb-4">
+              {language === 'hi' ? 'फील्ड सेक्टर 4 • फोटो द्वारा प्रारंभिक पहचान' : 'Field Sector 4 • Initial detection via photo'}
+            </p>
             <div className="flex items-center gap-2 bg-surface-container p-2 rounded-lg border border-outline-variant/30">
               <span className="material-symbols-outlined text-primary text-[20px]">calendar_clock</span>
-              <span className="font-body-md text-body-md text-primary font-semibold">Follow-up due tomorrow</span>
+              <span className="font-body-md text-body-md text-primary font-semibold">{t('followUpDue', language)}</span>
             </div>
           </div>
           <div className="w-full md:w-auto flex md:flex-col gap-2 mt-2 md:mt-0">
@@ -129,13 +149,13 @@ export const FarmerHomePage: React.FC = () => {
               onClick={() => navigate('/farmer/progress')}
               className="flex-1 md:flex-none px-4 py-2 bg-secondary text-on-secondary rounded-lg font-body-md text-body-md font-semibold hover:bg-primary transition-colors text-center"
             >
-              View Details
+              {t('viewDetails', language)}
             </button>
             <button
               onClick={() => navigate('/farmer/photo-capture')}
               className="flex-1 md:flex-none px-4 py-2 border border-outline text-on-surface rounded-lg font-body-md text-body-md font-semibold hover:bg-surface-container-low transition-colors text-center"
             >
-              Log Update
+              {t('logUpdate', language)}
             </button>
           </div>
         </div>

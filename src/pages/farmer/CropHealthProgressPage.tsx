@@ -1,21 +1,24 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useApp } from '../../context/AppContext';
+import { t } from '../../utils/translations';
 
 export const CropHealthProgressPage: React.FC = () => {
   const navigate = useNavigate();
+  const { language } = useApp();
 
   return (
     <div className="px-container-margin py-6 flex flex-col gap-6 max-w-4xl mx-auto w-full">
       {/* Header & Status */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <h1 className="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-on-surface font-bold">
-          Crop Health Progress
+          {t('cropHealthProgress', language)}
         </h1>
         <div className="inline-flex items-center gap-2 bg-surface-container text-on-surface-variant px-4 py-2 rounded-full border border-outline-variant">
           <span className="material-symbols-outlined text-secondary" style={{ fontVariationSettings: "'FILL' 1" }}>
             trending_up
           </span>
-          <span className="font-body-md text-body-md font-semibold text-secondary">Improving</span>
+          <span className="font-body-md text-body-md font-semibold text-secondary">{t('improving', language)}</span>
         </div>
       </div>
 
@@ -27,9 +30,9 @@ export const CropHealthProgressPage: React.FC = () => {
           </span>
         </div>
         <div>
-          <h3 className="font-body-lg text-body-lg font-semibold text-on-surface mb-1">AI Analysis</h3>
+          <h3 className="font-body-lg text-body-lg font-semibold text-on-surface mb-1">{t('aiAnalysis', language)}</h3>
           <p className="font-body-md text-body-md text-on-surface-variant">
-            Follow-up photo shows <strong className="text-secondary font-semibold">30% reduction</strong> in spotted leaf area compared to the initial scan after treatment application.
+            {t('followUpReduction', language)}
           </p>
         </div>
       </div>
@@ -48,12 +51,14 @@ export const CropHealthProgressPage: React.FC = () => {
               <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>
                 error
               </span>
-              Severe
+              {t('severe', language)}
             </div>
           </div>
           <div className="p-4 border-t border-outline-variant bg-surface">
-            <p className="font-body-md text-body-md font-semibold text-on-surface">Previous Scan</p>
-            <p className="font-label-caps text-label-caps text-on-surface-variant mt-1">Oct 12, 2023</p>
+            <p className="font-body-md text-body-md font-semibold text-on-surface">{t('previousScan', language)}</p>
+            <p className="font-label-caps text-label-caps text-on-surface-variant mt-1">
+              {language === 'hi' ? '12 अक्टूबर, 2023' : 'Oct 12, 2023'}
+            </p>
           </div>
         </div>
 
@@ -70,19 +75,21 @@ export const CropHealthProgressPage: React.FC = () => {
               <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>
                 check_circle
               </span>
-              Improving
+              {t('improving', language)}
             </div>
           </div>
           <div className="p-4 border-t border-outline-variant bg-surface">
-            <p className="font-body-md text-body-md font-semibold text-on-surface">Current Scan</p>
-            <p className="font-label-caps text-label-caps text-on-surface-variant mt-1">Today, 09:45 AM</p>
+            <p className="font-body-md text-body-md font-semibold text-on-surface">{t('currentScan', language)}</p>
+            <p className="font-label-caps text-label-caps text-on-surface-variant mt-1">
+              {language === 'hi' ? 'आज, 09:45 पूर्वाह्न' : 'Today, 09:45 AM'}
+            </p>
           </div>
         </div>
       </div>
 
       {/* Progress Chart */}
       <div className="bg-surface-container-lowest ambient-shadow rounded-xl p-card-padding border border-outline-variant">
-        <h3 className="font-body-lg text-body-lg font-semibold text-on-surface mb-4">Disease Severity Trend</h3>
+        <h3 className="font-body-lg text-body-lg font-semibold text-on-surface mb-4">{t('diseaseSeverityTrend', language)}</h3>
         <div className="w-full h-40 relative">
           <svg className="w-full h-full" viewBox="0 0 400 120" preserveAspectRatio="none">
             {/* Grid lines */}
@@ -108,11 +115,11 @@ export const CropHealthProgressPage: React.FC = () => {
             <circle cx="400" cy="105" fill="#ffffff" r="5" stroke="#006e1c" strokeWidth="2" />
           </svg>
           <div className="flex justify-between w-full mt-2 text-on-surface-variant font-label-caps text-label-caps font-semibold">
-            <span>Oct 1</span>
-            <span>Oct 5</span>
-            <span>Oct 9</span>
-            <span>Oct 12</span>
-            <span className="text-on-surface font-bold text-secondary">Today</span>
+            <span>{language === 'hi' ? '1 अक्टू' : 'Oct 1'}</span>
+            <span>{language === 'hi' ? '5 अक्टू' : 'Oct 5'}</span>
+            <span>{language === 'hi' ? '9 अक्टू' : 'Oct 9'}</span>
+            <span>{language === 'hi' ? '12 अक्टू' : 'Oct 12'}</span>
+            <span className="text-on-surface font-bold text-secondary">{language === 'hi' ? 'आज' : 'Today'}</span>
           </div>
         </div>
       </div>
@@ -124,7 +131,7 @@ export const CropHealthProgressPage: React.FC = () => {
           className="w-full bg-secondary text-on-secondary font-body-lg text-body-lg font-semibold py-4 px-6 rounded-xl shadow-md hover:bg-surface-tint active:scale-[0.98] transition-all flex justify-center items-center gap-2 cursor-pointer"
         >
           <span className="material-symbols-outlined">add_a_photo</span>
-          Submit another follow-up photo in 3 days
+          {t('submitAnotherFollowUp', language)}
         </button>
       </div>
     </div>
