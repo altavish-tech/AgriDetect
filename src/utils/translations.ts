@@ -82,6 +82,9 @@ export const translations = {
     askExpertToVerify: 'Ask Expert to Verify',
     analysisContext: 'Analysis Context',
     aiDetectedSymptoms: 'AI DETECTED SYMPTOMS',
+    crop: 'Crop',
+    stage: 'Stage',
+    location: 'Location',
     
     // Risk Analysis
     riskAnalysis: 'Risk Analysis',
@@ -250,6 +253,9 @@ export const translations = {
     askExpertToVerify: 'विशेषज्ञ से सत्यापन के लिए पूछें',
     analysisContext: 'विश्लेषण संदर्भ',
     aiDetectedSymptoms: 'AI द्वारा पहचाने गए लक्षण',
+    crop: 'फसल',
+    stage: 'चरण',
+    location: 'स्थान',
     
     // Risk Analysis
     riskAnalysis: 'जोखिम विश्लेषण',
