@@ -1,11 +1,319 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import { VILLAGE_RISKS } from '../../data/mockData';
+import jsPDF from 'jspdf';
 
 export const RegionalAnalyticsPage: React.FC = () => {
   const { showToast } = useApp();
+  const navigate = useNavigate();
   const [selectedCrop, setSelectedCrop] = useState('All Crops');
   const [selectedRegion, setSelectedRegion] = useState('All Regions');
+  const [dateRange, setDateRange] = useState('Last 30 Days');
+  const [diseaseType, setDiseaseType] = useState('All Pathogens & Pests');
+
+  // Dynamic data calculation based on filters
+  const getFilteredData = () => {
+    // Base data multipliers based on crop type
+    const cropMultipliers: Record<string, number> = {
+      'All Crops': 1.0,
+      'Tomato': 1.3,
+      'Wheat': 0.7,
+      'Maize': 0.9,
+      'Rice': 1.1,
+      'Potato': 0.8
+    };
+
+    // Date range multipliers
+    const dateMultipliers: Record<string, number> = {
+      'Last 30 Days': 1.0,
+      'Last 90 Days': 2.8,
+      'Current Kharif Season': 3.5,
+      'This Year (2026)': 5.2
+    };
+
+    // Region multipliers - different regions have different case loads
+    const regionMultipliers: Record<string, number> = {
+      'All Regions (Siwan)': 1.0,
+      'North Valley Sector': 1.2,
+      'Village A Sector': 0.9,
+      'Eastern Plains': 0.8,
+      'Southern Basin': 0.7
+    };
+
+    // Disease type multipliers - specific diseases have different prevalence
+    const diseaseMultipliers: Record<string, number> = {
+      'All Pathogens & Pests': 1.0,
+      'Early Blight (Alternaria)': 0.42,  // 42% of total
+      'Fall Armyworm (Spodoptera)': 0.31, // 31% of total
+      'Stem Rust (Puccinia)': 0.27,       // 27% of total
+      'Late Blight (Phytophthora)': 0.35
+    };
+
+    const cropMult = cropMultipliers[selectedCrop] || 1.0;
+    const dateMult = dateMultipliers[dateRange] || 1.0;
+    const regionMult = regionMultipliers[selectedRegion] || 1.0;
+    const diseaseMult = diseaseMultipliers[diseaseType] || 1.0;
+
+    const baseTotal = 1248;
+    const totalCases = Math.round(baseTotal * cropMult * dateMult * regionMult * diseaseMult);
+
+    // Disease distribution varies by crop AND disease filter
+    let blightPercent = 42;
+    let armywormPercent = 31;
+    let rustPercent = 27;
+
+    // If specific disease is selected, show 100% of that disease
+    if (diseaseType === 'Early Blight (Alternaria)' || diseaseType === 'Late Blight (Phytophthora)') {
+      blightPercent = 100;
+      armywormPercent = 0;
+      rustPercent = 0;
+    } else if (diseaseType === 'Fall Armyworm (Spodoptera)') {
+      blightPercent = 0;
+      armywormPercent = 100;
+      rustPercent = 0;
+    } else if (diseaseType === 'Stem Rust (Puccinia)') {
+      blightPercent = 0;
+      armywormPercent = 0;
+      rustPercent = 100;
+    } else {
+      // Distribution varies by crop when "All Pathogens" is selected
+      if (selectedCrop === 'Tomato') {
+        blightPercent = 58;
+        armywormPercent = 22;
+        rustPercent = 20;
+      } else if (selectedCrop === 'Wheat') {
+        blightPercent = 25;
+        armywormPercent = 15;
+        rustPercent = 60;
+      } else if (selectedCrop === 'Maize') {
+        blightPercent = 30;
+        armywormPercent = 55;
+        rustPercent = 15;
+      } else if (selectedCrop === 'Rice') {
+        blightPercent = 48;
+        armywormPercent = 28;
+        rustPercent = 24;
+      } else if (selectedCrop === 'Potato') {
+        blightPercent = 65;
+        armywormPercent = 20;
+        rustPercent = 15;
+      }
+
+      // Region also affects disease distribution
+      if (selectedRegion === 'North Valley Sector') {
+        // North has more blight
+        blightPercent = Math.min(blightPercent + 10, 100);
+        rustPercent = Math.max(rustPercent - 10, 0);
+      } else if (selectedRegion === 'Eastern Plains') {
+        // East has more rust
+        rustPercent = Math.min(rustPercent + 15, 100);
+        blightPercent = Math.max(blightPercent - 15, 0);
+      } else if (selectedRegion === 'Southern Basin') {
+        // South has more pest issues
+        armywormPercent = Math.min(armywormPercent + 12, 100);
+        blightPercent = Math.max(blightPercent - 12, 0);
+      }
+    }
+
+    // Weekly trend data changes with ALL filters
+    const baseTrend = [30, 45, 60, 80, 50, 70, 95, 82];
+    
+    // Different regions have different trend patterns
+    let trendPattern = baseTrend;
+    if (selectedRegion === 'North Valley Sector') {
+      trendPattern = [35, 50, 70, 90, 60, 80, 105, 95]; // Steeper increase
+    } else if (selectedRegion === 'Eastern Plains') {
+      trendPattern = [25, 35, 50, 65, 40, 55, 75, 65]; // Lower overall
+    } else if (selectedRegion === 'Southern Basin') {
+      trendPattern = [20, 30, 45, 60, 35, 50, 70, 60]; // Lowest
+    }
+
+    // Scale trend based on all multipliers
+    const trendData = trendPattern.map(val => 
+      Math.round(val * cropMult * (dateMult / 2) * regionMult * diseaseMult)
+    );
+
+    return {
+      totalCases,
+      blightPercent,
+      armywormPercent,
+      rustPercent,
+      trendData
+    };
+  };
+
+  const filteredData = getFilteredData();
+
+  // CSV Export function
+  const handleExportCSV = () => {
+    // Create CSV header
+    const headers = ['Village Name', 'Active Cases', 'Risk Level', 'Trend (7 Days)', 'Trend Direction'];
+    
+    // Create CSV rows from village data
+    const rows = VILLAGE_RISKS.map(village => [
+      village.name,
+      village.activeCases.toString(),
+      village.riskLevel,
+      village.trend,
+      village.trendDirection
+    ]);
+
+    // Add summary statistics
+    const summaryRows = [
+      [''],
+      ['SUMMARY STATISTICS'],
+      ['Total Cases', filteredData.totalCases.toString()],
+      ['Date Range', dateRange],
+      ['Crop Type', selectedCrop],
+      ['Region', selectedRegion],
+      ['Disease Type', diseaseType],
+      [''],
+      ['DISEASE DISTRIBUTION'],
+      ['Blight', `${filteredData.blightPercent}%`],
+      ['Armyworm', `${filteredData.armywormPercent}%`],
+      ['Rust', `${filteredData.rustPercent}%`]
+    ];
+
+    // Combine all data
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(',')),
+      ...summaryRows.map(row => row.join(','))
+    ].join('\n');
+
+    // Create blob and download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', `analytics-report-${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    showToast('Analytics data exported to CSV successfully!');
+  };
+
+  // PDF Export function - generates actual PDF
+  const handleExportPDF = () => {
+    const doc = new jsPDF();
+    
+    // Set up fonts and colors
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 15;
+    let yPos = 20;
+
+    // Title
+    doc.setFontSize(20);
+    doc.setFont('helvetica', 'bold');
+    doc.text('AGRIDETECT ANALYTICS REPORT', margin, yPos);
+    
+    yPos += 10;
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Generated: ${new Date().toLocaleString()}`, margin, yPos);
+    
+    // Horizontal line
+    yPos += 5;
+    doc.setLineWidth(0.5);
+    doc.line(margin, yPos, pageWidth - margin, yPos);
+    yPos += 10;
+
+    // Filters Section
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('FILTERS APPLIED', margin, yPos);
+    yPos += 8;
+    
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Date Range: ${dateRange}`, margin + 5, yPos);
+    yPos += 6;
+    doc.text(`Crop Type: ${selectedCrop}`, margin + 5, yPos);
+    yPos += 6;
+    doc.text(`Region: ${selectedRegion}`, margin + 5, yPos);
+    yPos += 6;
+    doc.text(`Disease Type: ${diseaseType}`, margin + 5, yPos);
+    yPos += 12;
+
+    // Summary Statistics Section
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('SUMMARY STATISTICS', margin, yPos);
+    yPos += 8;
+    
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Total Cases: ${filteredData.totalCases.toLocaleString()}`, margin + 5, yPos);
+    yPos += 6;
+    doc.text(`Blight Cases: ${filteredData.blightPercent}%`, margin + 5, yPos);
+    yPos += 6;
+    doc.text(`Armyworm Cases: ${filteredData.armywormPercent}%`, margin + 5, yPos);
+    yPos += 6;
+    doc.text(`Rust Cases: ${filteredData.rustPercent}%`, margin + 5, yPos);
+    yPos += 12;
+
+    // Village Breakdown Section
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('VILLAGE-LEVEL BREAKDOWN', margin, yPos);
+    yPos += 8;
+    
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    
+    VILLAGE_RISKS.forEach((village, index) => {
+      if (yPos > 270) { // Check if near bottom of page
+        doc.addPage();
+        yPos = 20;
+      }
+      
+      const villageText = `${village.name}: ${village.activeCases} cases (${village.riskLevel} Risk, ${village.trend} trend)`;
+      doc.text(villageText, margin + 5, yPos);
+      yPos += 6;
+    });
+
+    yPos += 6;
+
+    // Weekly Trend Section
+    if (yPos > 250) {
+      doc.addPage();
+      yPos = 20;
+    }
+    
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('WEEKLY INCIDENT TREND', margin, yPos);
+    yPos += 8;
+    
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    
+    filteredData.trendData.forEach((val, i) => {
+      if (yPos > 270) {
+        doc.addPage();
+        yPos = 20;
+      }
+      doc.text(`Week ${i + 1}: ${val} cases`, margin + 5, yPos);
+      yPos += 6;
+    });
+
+    // Footer
+    yPos = doc.internal.pageSize.getHeight() - 15;
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'italic');
+    doc.text('Report compiled by AgriDetect AI System', margin, yPos);
+    doc.text('Siwan District Agricultural Monitoring', margin, yPos + 5);
+
+    // Save the PDF
+    doc.save(`analytics-report-${new Date().toISOString().split('T')[0]}.pdf`);
+    
+    showToast('PDF report generated and downloaded successfully!');
+  };
 
   return (
     <div className="p-container-margin max-w-7xl mx-auto space-y-gutter w-full">
@@ -21,14 +329,14 @@ export const RegionalAnalyticsPage: React.FC = () => {
         </div>
         <div className="flex gap-2 w-full md:w-auto">
           <button
-            onClick={() => showToast('Compiling analytical PDF dossier for Siwan District...')}
+            onClick={handleExportPDF}
             className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-surface text-primary border border-outline rounded-full hover:bg-surface-container-low transition-colors font-bold h-touch-target-min cursor-pointer text-sm"
           >
             <span className="material-symbols-outlined text-sm">download</span>
             <span>PDF Report</span>
           </button>
           <button
-            onClick={() => showToast('Aggregated village case records exported to CSV.')}
+            onClick={handleExportCSV}
             className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-surface text-primary border border-outline rounded-full hover:bg-surface-container-low transition-colors font-bold h-touch-target-min cursor-pointer text-sm"
           >
             <span className="material-symbols-outlined text-sm">dataset</span>
@@ -44,11 +352,15 @@ export const RegionalAnalyticsPage: React.FC = () => {
             <label className="block font-label-caps text-label-caps text-on-surface-variant mb-1 uppercase font-bold">
               Date Range
             </label>
-            <select className="w-full bg-surface border border-outline rounded-lg p-2 text-on-surface h-10 text-sm focus:border-primary outline-none">
+            <select 
+              value={dateRange}
+              onChange={(e) => setDateRange(e.target.value)}
+              className="w-full bg-surface border border-outline rounded-lg p-2 text-on-surface h-10 text-sm focus:border-primary outline-none"
+            >
               <option>Last 30 Days</option>
               <option>Last 90 Days</option>
               <option>Current Kharif Season</option>
-              <option>This Year (2024)</option>
+              <option>This Year (2026)</option>
             </select>
           </div>
           <div>
@@ -88,7 +400,11 @@ export const RegionalAnalyticsPage: React.FC = () => {
             <label className="block font-label-caps text-label-caps text-on-surface-variant mb-1 uppercase font-bold">
               Disease Type
             </label>
-            <select className="w-full bg-surface border border-outline rounded-lg p-2 text-on-surface h-10 text-sm focus:border-primary outline-none">
+            <select 
+              value={diseaseType}
+              onChange={(e) => setDiseaseType(e.target.value)}
+              className="w-full bg-surface border border-outline rounded-lg p-2 text-on-surface h-10 text-sm focus:border-primary outline-none"
+            >
               <option>All Pathogens &amp; Pests</option>
               <option>Early Blight (Alternaria)</option>
               <option>Fall Armyworm (Spodoptera)</option>
@@ -111,31 +427,31 @@ export const RegionalAnalyticsPage: React.FC = () => {
             <div className="w-44 h-44 rounded-full bg-surface-container border-8 border-surface flex items-center justify-center relative shadow-inner overflow-hidden">
               <div
                 className="absolute inset-0 bg-error opacity-75"
-                style={{ clipPath: 'polygon(50% 50%, 0 50%, 0 0, 100% 0, 100% 40%)' }}
+                style={{ clipPath: `polygon(50% 50%, 0 50%, 0 0, 100% 0, 100% ${filteredData.blightPercent}%)` }}
               ></div>
               <div
                 className="absolute inset-0 bg-amber-500 opacity-60"
-                style={{ clipPath: 'polygon(50% 50%, 100% 40%, 100% 100%, 50% 100%)' }}
+                style={{ clipPath: `polygon(50% 50%, 100% ${filteredData.blightPercent}%, 100% 100%, ${100 - filteredData.rustPercent}% 100%)` }}
               ></div>
               <div
                 className="absolute inset-0 bg-primary opacity-50"
-                style={{ clipPath: 'polygon(50% 50%, 50% 100%, 0 100%, 0 50%)' }}
+                style={{ clipPath: `polygon(50% 50%, ${100 - filteredData.rustPercent}% 100%, 0 100%, 0 50%)` }}
               ></div>
               <div className="w-20 h-20 bg-surface-container-lowest rounded-full flex flex-col items-center justify-center z-10 shadow-sm">
                 <span className="text-xs font-bold text-on-surface">Total</span>
-                <span className="font-status-number text-primary font-bold text-sm">1,248</span>
+                <span className="font-status-number text-primary font-bold text-sm">{filteredData.totalCases.toLocaleString()}</span>
               </div>
             </div>
           </div>
           <div className="mt-4 flex flex-wrap justify-center gap-3">
             <div className="flex items-center gap-1.5 text-xs font-semibold">
-              <span className="w-3 h-3 rounded-full bg-error"></span> Blight (42%)
+              <span className="w-3 h-3 rounded-full bg-error"></span> Blight ({filteredData.blightPercent}%)
             </div>
             <div className="flex items-center gap-1.5 text-xs font-semibold">
-              <span className="w-3 h-3 rounded-full bg-amber-500"></span> Armyworm (31%)
+              <span className="w-3 h-3 rounded-full bg-amber-500"></span> Armyworm ({filteredData.armywormPercent}%)
             </div>
             <div className="flex items-center gap-1.5 text-xs font-semibold">
-              <span className="w-3 h-3 rounded-full bg-primary"></span> Rust (27%)
+              <span className="w-3 h-3 rounded-full bg-primary"></span> Rust ({filteredData.rustPercent}%)
             </div>
           </div>
         </div>
@@ -147,14 +463,22 @@ export const RegionalAnalyticsPage: React.FC = () => {
             Weekly Incident Volume by Block (Trend)
           </h3>
           <div className="flex-1 flex items-end justify-between min-h-[220px] relative border-b border-l border-outline-variant pb-2 pl-2 gap-3">
-            <div className="flex-1 h-[30%] bg-primary opacity-50 rounded-t-sm"></div>
-            <div className="flex-1 h-[45%] bg-primary opacity-60 rounded-t-sm"></div>
-            <div className="flex-1 h-[60%] bg-primary opacity-70 rounded-t-sm"></div>
-            <div className="flex-1 h-[80%] bg-primary opacity-80 rounded-t-sm"></div>
-            <div className="flex-1 h-[50%] bg-primary opacity-60 rounded-t-sm"></div>
-            <div className="flex-1 h-[70%] bg-primary opacity-75 rounded-t-sm"></div>
-            <div className="flex-1 h-[95%] bg-error opacity-90 rounded-t-sm"></div>
-            <div className="flex-1 h-[82%] bg-error opacity-80 rounded-t-sm"></div>
+            {filteredData.trendData.map((height, index) => {
+              const maxHeight = Math.max(...filteredData.trendData);
+              const percentage = (height / maxHeight) * 100;
+              const isHighlight = index >= filteredData.trendData.length - 2;
+              return (
+                <div 
+                  key={index}
+                  className={`flex-1 ${isHighlight ? 'bg-error' : 'bg-primary'} rounded-t-sm transition-all duration-500`}
+                  style={{ 
+                    height: `${percentage}%`,
+                    opacity: isHighlight ? 0.9 : 0.5 + (index * 0.05)
+                  }}
+                  title={`Week ${index + 1}: ${height} cases`}
+                ></div>
+              );
+            })}
           </div>
           <div className="flex justify-between text-xs text-on-surface-variant mt-2 px-1 font-label-caps font-semibold">
             <span>W1</span>
@@ -220,7 +544,7 @@ export const RegionalAnalyticsPage: React.FC = () => {
                   </td>
                   <td className="p-4 text-right">
                     <button
-                      onClick={() => showToast(`Drill-down insights for ${village.name} sector opened.`)}
+                      onClick={() => navigate(`/dao/village/${village.name}`)}
                       className="text-primary hover:text-primary-container p-2 rounded-full hover:bg-surface-container-low transition-colors cursor-pointer"
                       title="Inspect Sector"
                     >

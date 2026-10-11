@@ -15,6 +15,8 @@ import { RiskAnalysisSummaryPage } from './pages/farmer/RiskAnalysisSummaryPage'
 import { FarmerAdvisoryGuidePage } from './pages/farmer/FarmerAdvisoryGuidePage';
 import { CropHealthProgressPage } from './pages/farmer/CropHealthProgressPage';
 import { WeatherForecastPage } from './pages/farmer/WeatherForecastPage';
+import { MyReportsPage } from './pages/farmer/MyReportsPage';
+import { ReportDetailPage } from './pages/farmer/ReportDetailPage';
 
 // Expert Pages
 import { ExpertDashboardPage } from './pages/expert/ExpertDashboardPage';
@@ -24,6 +26,7 @@ import { ExpertCaseAnalysisPage } from './pages/expert/ExpertCaseAnalysisPage';
 import { OfficerMonitoringPage } from './pages/dao/OfficerMonitoringPage';
 import { RegionalAnalyticsPage } from './pages/dao/RegionalAnalyticsPage';
 import { EarlyWarningCenterPage } from './pages/dao/EarlyWarningCenterPage';
+import { VillageDetailPage } from './pages/dao/VillageDetailPage';
 
 export const App: React.FC = () => {
   return (
@@ -47,6 +50,8 @@ export const App: React.FC = () => {
             <Route path="/farmer/advisory" element={<FarmerAdvisoryGuidePage />} />
             <Route path="/farmer/progress" element={<CropHealthProgressPage />} />
             <Route path="/farmer/weather" element={<WeatherForecastPage />} />
+            <Route path="/farmer/my-reports" element={<MyReportsPage />} />
+            <Route path="/farmer/report-detail/:reportId" element={<ReportDetailPage />} />
 
             {/* Expert Routes */}
             <Route path="/expert/dashboard" element={<ExpertDashboardPage />} />
@@ -56,6 +61,7 @@ export const App: React.FC = () => {
             <Route path="/dao/monitoring" element={<OfficerMonitoringPage />} />
             <Route path="/dao/analytics" element={<RegionalAnalyticsPage />} />
             <Route path="/dao/early-warnings" element={<EarlyWarningCenterPage />} />
+            <Route path="/dao/village/:villageName" element={<VillageDetailPage />} />
           </Route>
 
           {/* Fallback */}

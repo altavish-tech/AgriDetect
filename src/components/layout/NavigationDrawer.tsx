@@ -13,16 +13,13 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({ isOpenMobile
   // Define nav links based on role
   const officerLinks = [
     { label: 'Dashboard', icon: 'dashboard', path: '/dao/monitoring' },
-    { label: 'Hotspots', icon: 'location_on', path: '/dao/monitoring' },
     { label: 'Analytics', icon: 'insights', path: '/dao/analytics' },
     { label: 'Cases', icon: 'folder_open', path: '/expert/dashboard' },
     { label: 'Early Warnings', icon: 'warning', path: '/dao/early-warnings' },
-    { label: 'Reports', icon: 'summarize', path: '/dao/analytics' },
   ];
 
   const expertLinks = [
     { label: 'Dashboard', icon: 'dashboard', path: '/expert/dashboard' },
-    { label: 'Cases Queue', icon: 'folder_open', path: '/expert/dashboard' },
     { label: 'Hotspots', icon: 'location_on', path: '/dao/monitoring' },
     { label: 'Analytics', icon: 'insights', path: '/dao/analytics' },
     { label: 'Early Warnings', icon: 'warning', path: '/dao/early-warnings' },

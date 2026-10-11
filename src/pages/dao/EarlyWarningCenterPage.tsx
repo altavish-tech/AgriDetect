@@ -7,6 +7,8 @@ export const EarlyWarningCenterPage: React.FC = () => {
   const [manualTitle, setManualTitle] = useState('');
   const [manualSector, setManualSector] = useState('North Valley Sector');
   const [manualMessage, setManualMessage] = useState('');
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const [severityFilter, setSeverityFilter] = useState<string>('all');
 
   const handleCreateManualAlert = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,13 +31,74 @@ export const EarlyWarningCenterPage: React.FC = () => {
           </p>
         </div>
         <div className="flex gap-2">
-          <button
-            onClick={() => showToast('Filtered to active high priority alerts')}
-            className="h-10 px-4 flex items-center gap-2 border border-outline rounded-full text-on-surface font-body-md hover:bg-surface-container-low transition-colors text-sm font-semibold cursor-pointer"
-          >
-            <span className="material-symbols-outlined text-sm">filter_list</span>
-            Filter
-          </button>
+          <div className="relative">
+            <button
+              onClick={() => setShowFilterMenu(!showFilterMenu)}
+              className="h-10 px-4 flex items-center gap-2 border border-outline rounded-full text-on-surface font-body-md hover:bg-surface-container-low transition-colors text-sm font-semibold cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-sm">filter_list</span>
+              Filter
+            </button>
+            
+            {showFilterMenu && (
+              <div className="absolute right-0 top-12 bg-surface-container-highest rounded-xl shadow-lg border border-outline-variant p-4 z-50 min-w-[200px]">
+                <h3 className="font-body-lg font-bold text-on-surface mb-3">Filter by Severity</h3>
+                <div className="flex flex-col gap-2">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="severity"
+                      value="all"
+                      checked={severityFilter === 'all'}
+                      onChange={(e) => setSeverityFilter(e.target.value)}
+                      className="cursor-pointer"
+                    />
+                    <span className="text-on-surface text-sm">All Alerts</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="severity"
+                      value="critical"
+                      checked={severityFilter === 'critical'}
+                      onChange={(e) => setSeverityFilter(e.target.value)}
+                      className="cursor-pointer"
+                    />
+                    <span className="text-on-surface text-sm">Critical Only</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="severity"
+                      value="high"
+                      checked={severityFilter === 'high'}
+                      onChange={(e) => setSeverityFilter(e.target.value)}
+                      className="cursor-pointer"
+                    />
+                    <span className="text-on-surface text-sm">High Priority</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="severity"
+                      value="medium"
+                      checked={severityFilter === 'medium'}
+                      onChange={(e) => setSeverityFilter(e.target.value)}
+                      className="cursor-pointer"
+                    />
+                    <span className="text-on-surface text-sm">Medium Priority</span>
+                  </label>
+                </div>
+                <button
+                  onClick={() => setShowFilterMenu(false)}
+                  className="mt-4 w-full px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-semibold"
+                >
+                  Apply Filter
+                </button>
+              </div>
+            )}
+          </div>
+          
           <button
             onClick={() => setShowManualModal(true)}
             className="h-10 px-5 flex items-center gap-2 bg-primary text-on-primary rounded-full font-body-md hover:opacity-90 transition-opacity shadow-sm text-sm font-bold cursor-pointer"

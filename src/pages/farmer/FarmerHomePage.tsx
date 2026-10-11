@@ -99,7 +99,7 @@ export const FarmerHomePage: React.FC = () => {
 
         {/* My Reports */}
         <button
-          onClick={() => navigate('/farmer/progress')}
+          onClick={() => navigate('/farmer/my-reports')}
           className="bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-card-padding flex flex-col items-center justify-center gap-3 ambient-shadow hover:bg-surface-container-low active:bg-surface-variant transition-colors"
         >
           <div className="w-12 h-12 rounded-full bg-tertiary-container text-on-tertiary-container flex items-center justify-center">

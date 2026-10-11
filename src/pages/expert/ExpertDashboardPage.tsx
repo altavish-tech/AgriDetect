@@ -6,17 +6,62 @@ export const ExpertDashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const { cases, showToast, setActiveCaseId } = useApp();
   const [searchTerm, setSearchTerm] = useState('');
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<string>('all');
 
-  const filteredCases = cases.filter(
-    (c) =>
+  const filteredCases = cases.filter((c) => {
+    // Text search filter
+    const matchesSearch = 
       c.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       c.crop.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.aiDiagnosis.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+      c.aiDiagnosis.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    // Status filter
+    const matchesStatus = statusFilter === 'all' || c.status === statusFilter;
+
+    return matchesSearch && matchesStatus;
+  });
 
   const handleOpenCase = (id: string) => {
     setActiveCaseId(id);
     navigate(`/expert/case/${id}`);
+  };
+
+  const handleExportCSV = () => {
+    // Create CSV header
+    const headers = ['Case ID', 'Crop', 'AI Diagnosis', 'Confidence', 'Date', 'Status', 'Severity'];
+    
+    // Create CSV rows
+    const rows = filteredCases.map(c => [
+      c.id,
+      c.crop,
+      c.aiDiagnosis,
+      `${c.aiConfidence}%`,
+      c.date,
+      c.status,
+      c.severity || 'Normal'
+    ]);
+
+    // Combine headers and rows
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+
+    // Create blob and download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', `expert-cases-${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    showToast('Case queue exported to CSV successfully!');
   };
 
   return (
@@ -32,14 +77,64 @@ export const ExpertDashboardPage: React.FC = () => {
           </p>
         </div>
         <div className="flex gap-2">
+          <div className="relative">
+            <button
+              onClick={() => setShowFilterMenu(!showFilterMenu)}
+              className="bg-surface-container-high hover:bg-surface-variant text-on-surface flex items-center gap-2 px-4 py-2 rounded-lg transition-colors font-body-md font-medium shadow-sm cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-sm">filter_list</span> Filter
+            </button>
+            
+            {showFilterMenu && (
+              <div className="absolute right-0 top-12 bg-surface-container-highest rounded-xl shadow-lg border border-outline-variant p-4 z-50 min-w-[200px]">
+                <h3 className="font-body-lg font-bold text-on-surface mb-3">Filter by Status</h3>
+                <div className="flex flex-col gap-2">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="status"
+                      value="all"
+                      checked={statusFilter === 'all'}
+                      onChange={(e) => setStatusFilter(e.target.value)}
+                      className="cursor-pointer"
+                    />
+                    <span className="text-on-surface text-sm">All Cases</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="status"
+                      value="pending_expert"
+                      checked={statusFilter === 'pending_expert'}
+                      onChange={(e) => setStatusFilter(e.target.value)}
+                      className="cursor-pointer"
+                    />
+                    <span className="text-on-surface text-sm">Pending Only</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="status"
+                      value="expert_verified"
+                      checked={statusFilter === 'expert_verified'}
+                      onChange={(e) => setStatusFilter(e.target.value)}
+                      className="cursor-pointer"
+                    />
+                    <span className="text-on-surface text-sm">Verified Only</span>
+                  </label>
+                </div>
+                <button
+                  onClick={() => setShowFilterMenu(false)}
+                  className="mt-4 w-full px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-semibold"
+                >
+                  Apply
+                </button>
+              </div>
+            )}
+          </div>
+          
           <button
-            onClick={() => showToast('Filter options: Pending verification only')}
-            className="bg-surface-container-high hover:bg-surface-variant text-on-surface flex items-center gap-2 px-4 py-2 rounded-lg transition-colors font-body-md font-medium shadow-sm cursor-pointer"
-          >
-            <span className="material-symbols-outlined text-sm">filter_list</span> Filter
-          </button>
-          <button
-            onClick={() => showToast('Case queue exported to CSV')}
+            onClick={handleExportCSV}
             className="bg-primary hover:bg-surface-tint text-on-primary flex items-center gap-2 px-4 py-2 rounded-lg transition-colors font-body-md font-medium shadow-sm cursor-pointer"
           >
             <span className="material-symbols-outlined text-sm">download</span> Export

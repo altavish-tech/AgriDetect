@@ -1,10 +1,93 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
+import jsPDF from 'jspdf';
 
 export const OfficerMonitoringPage: React.FC = () => {
   const navigate = useNavigate();
   const { alerts, broadcastAdvisory, showToast } = useApp();
+  const [dateRange, setDateRange] = useState('Last 30 Days');
+  const [showDateMenu, setShowDateMenu] = useState(false);
+
+  // Export Report as PDF
+  const handleExportReport = () => {
+    const doc = new jsPDF();
+    const margin = 15;
+    let yPos = 20;
+
+    // Title
+    doc.setFontSize(20);
+    doc.setFont('helvetica', 'bold');
+    doc.text('REGIONAL AGRICULTURE MONITORING REPORT', margin, yPos);
+    
+    yPos += 10;
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Generated: ${new Date().toLocaleString()}`, margin, yPos);
+    doc.text(`Date Range: ${dateRange}`, margin, yPos + 5);
+    
+    yPos += 15;
+    doc.setLineWidth(0.5);
+    doc.line(margin, yPos, doc.internal.pageSize.getWidth() - margin, yPos);
+    yPos += 10;
+
+    // KPI Summary
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('KEY PERFORMANCE INDICATORS', margin, yPos);
+    yPos += 8;
+    
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Total Reports: 1,248 (+12%)', margin + 5, yPos);
+    yPos += 6;
+    doc.text('Active Hotspots: 5 (No Change)', margin + 5, yPos);
+    yPos += 6;
+    doc.text('Critical Alerts: 2 (Urgent)', margin + 5, yPos);
+    yPos += 12;
+
+    // Critical Alerts Section
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('CRITICAL ALERTS', margin, yPos);
+    yPos += 8;
+    
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    
+    alerts.slice(0, 5).forEach((alert) => {
+      if (yPos > 270) {
+        doc.addPage();
+        yPos = 20;
+      }
+      doc.text(`${alert.sector}: ${alert.title} (${alert.level})`, margin + 5, yPos);
+      yPos += 6;
+    });
+
+    yPos += 6;
+
+    // Regional Status
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('REGIONAL STATUS SUMMARY', margin, yPos);
+    yPos += 8;
+    
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Siwan District agricultural health monitoring across 5 active hotspot zones.', margin + 5, yPos);
+    yPos += 6;
+    doc.text('Real-time threat detection and cluster analysis operational.', margin + 5, yPos);
+
+    // Footer
+    yPos = doc.internal.pageSize.getHeight() - 15;
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'italic');
+    doc.text('Report compiled by AgriDetect Regional Monitoring System', margin, yPos);
+    doc.text('Siwan District Agriculture Office', margin, yPos + 5);
+
+    doc.save(`regional-monitoring-report-${new Date().toISOString().split('T')[0]}.pdf`);
+    showToast('Regional monitoring report downloaded successfully!');
+  };
 
   return (
     <div className="p-container-margin max-w-7xl mx-auto flex flex-col gap-6 w-full">
@@ -19,15 +102,42 @@ export const OfficerMonitoringPage: React.FC = () => {
           </p>
         </div>
         <div className="flex gap-2">
+          <div className="relative">
+            <button
+              onClick={() => setShowDateMenu(!showDateMenu)}
+              className="flex items-center justify-center gap-2 h-touch-target-min px-5 rounded-full bg-surface-container-high text-on-surface font-label-caps text-label-caps hover:bg-surface-container-highest transition-colors cursor-pointer font-bold"
+            >
+              <span className="material-symbols-outlined text-[18px]">calendar_today</span>
+              {dateRange}
+            </button>
+            
+            {showDateMenu && (
+              <div className="absolute right-0 top-12 bg-surface-container-highest rounded-xl shadow-lg border border-outline-variant p-4 z-50 min-w-[180px]">
+                <h3 className="font-body-lg font-bold text-on-surface mb-3">Select Date Range</h3>
+                <div className="flex flex-col gap-2">
+                  {['Last 7 Days', 'Last 30 Days', 'Last 90 Days', 'This Year'].map((range) => (
+                    <label key={range} className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="dateRange"
+                        value={range}
+                        checked={dateRange === range}
+                        onChange={(e) => {
+                          setDateRange(e.target.value);
+                          setShowDateMenu(false);
+                        }}
+                        className="cursor-pointer"
+                      />
+                      <span className="text-on-surface text-sm">{range}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          
           <button
-            onClick={() => showToast('Date range: Last 30 Days selected')}
-            className="flex items-center justify-center gap-2 h-touch-target-min px-5 rounded-full bg-surface-container-high text-on-surface font-label-caps text-label-caps hover:bg-surface-container-highest transition-colors cursor-pointer font-bold"
-          >
-            <span className="material-symbols-outlined text-[18px]">calendar_today</span>
-            Last 30 Days
-          </button>
-          <button
-            onClick={() => showToast('Regional situation report downloaded as PDF')}
+            onClick={handleExportReport}
             className="flex items-center justify-center gap-2 h-touch-target-min px-6 rounded-full bg-primary text-on-primary font-label-caps text-label-caps hover:bg-primary/90 transition-colors shadow-sm cursor-pointer font-bold"
           >
             <span className="material-symbols-outlined text-[18px]">download</span>
