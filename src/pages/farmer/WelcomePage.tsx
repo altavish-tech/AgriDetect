@@ -38,8 +38,8 @@ export const WelcomePage: React.FC = () => {
           <div className="w-full h-64 rounded-xl overflow-hidden shadow-sm mb-4">
             <img
               className="w-full h-full object-cover"
-              alt="Farmer examining healthy crop"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKDTzRmuRgw0lq0lF6Ost7rtLI9h-zwFB70tynSoB-nfKq2VufWXAsxOL12E6YnojwszoD847hdx45VP9JF8c0ZzDz8ql5-4h9Ti08iJL4-lqjY-tDTaTrhCMViJwvhsneSAbYtCP-xKs54Jbu6MReiOW9X2GkaDQhMmnrxQRAilovpmw_nzoJhpf8Ovf4FUozGucU3yjxGBAKfIBrDAbh8l3_qywm2pDrymLD8mRySCbbqYuis8VdZw"
+              alt="Indian farmer using smartphone in field with digital agriculture technology"
+              src="/hero-farmer.jpg"
             />
           </div>
 
